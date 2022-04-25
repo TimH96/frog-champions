@@ -15,8 +15,12 @@ const fetchLevels = async (): Promise<SpeedrunApiResponse<SpeedrunLevel[]>> => {
     return await (await fetch(`https://${HREF}/api/${API_VERSION}/games/${GAME_ID}/levels`)).json()
 }
 
-const fetchCategories = async (level: SpeedrunLevel): Promise<SpeedrunApiResponse<SpeedrunCategory[]>> => {
+const fetchLevelCategories = async (level: SpeedrunLevel): Promise<SpeedrunApiResponse<SpeedrunCategory[]>> => {
     return await (await fetch(`https://${HREF}/api/${API_VERSION}/levels/${level.id}/categories`)).json()
 }
 
-export { fetchLevelBoard, fetchLevels, fetchCategories }
+const fetchLevelVariables = async (level: SpeedrunLevel): Promise<SpeedrunApiResponse<SpeedrunCategory[]>> => {
+    return await (await fetch(`https://${HREF}/api/${API_VERSION}/levels/${level.id}/variables`)).json()
+}
+
+export { fetchLevelBoard, fetchLevels, fetchLevelCategories, fetchLevelVariables }

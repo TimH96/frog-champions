@@ -1,18 +1,43 @@
+import { newSubcatFilter } from "./ts/speedruncom/helper";
 import SpeedrunApiResponse from "./ts/speedruncom/types/SpeedrunApiResponse";
+import SpeedrunCategory from "./ts/speedruncom/types/SpeedrunCategory";
 import SpeedrunId from "./ts/speedruncom/types/SpeedrunId";
 import SpeedrunLevel from "./ts/speedruncom/types/SpeedrunLevel";
+import { fetchLevelCategories, fetchLevelBoard, fetchLevels } from "./ts/speedruncom/wrapper";
 
-export default interface Player {
-    name: string
-    id: SpeedrunId
-}
 
 async function main() {
-    const levelsRes: SpeedrunApiResponse<SpeedrunLevel[]> = await (await fetch("https://www.speedrun.com/api/v1/games/o1y9j9v6/levels")).json()
-    for (const level of levelsRes.data) {
-        const categoriesRes: SpeedrunApiResponse<any> = await (await fetch(level.links[2].uri)).json()
-        console.log(categoriesRes)
-    }
+    const levelsRes: SpeedrunApiResponse<SpeedrunLevel[]> = await fetchLevels()
+    const levels = levelsRes.data;
+
+    const categoriesRes: SpeedrunApiResponse<SpeedrunCategory[]> = await fetchLevelCategories(levels[0])
+    const categories = categoriesRes.data;
+
+    // this wokrs but sucks
+    //let leaderboards: SpeedrunLeaderboard[] = []
+    //for (const level of levelsRes.data) {
+    //    for (const category of categoriesRes.data) {
+    //        leaderboards.push(await (await fetchLevelBoard(level, category)).data)
+    //    }
+    //}
+    
+    const fullClearFilter = newSubcatFilter("", "")
+
+    const c = await fetchLevelBoard(levels[0], categories[1])
+    console.log(c)
+
+    const d = await fetchLevelBoard(levels[1], categories[1])
+    console.log(d)
+
+    /*
+    const x = await Promise.all(levels.slice(0, 8).map(async (level) => {
+        return categories.map((category) => {
+            return fetchLevelBoard(level, category)
+        })
+    }))
+    console.log(x)
+    */
+
 }
 
 main()
