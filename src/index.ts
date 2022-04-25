@@ -3,7 +3,7 @@ import SpeedrunApiResponse from "./ts/speedruncom/types/SpeedrunApiResponse";
 import SpeedrunCategory from "./ts/speedruncom/types/SpeedrunCategory";
 import SpeedrunId from "./ts/speedruncom/types/SpeedrunId";
 import SpeedrunLevel from "./ts/speedruncom/types/SpeedrunLevel";
-import { fetchLevelCategories, fetchLevelBoard, fetchLevels } from "./ts/speedruncom/wrapper";
+import { fetchLevelCategories, fetchLevelBoard, fetchLevels, fetchLevelVariables } from "./ts/speedruncom/wrapper";
 
 
 async function main() {
@@ -13,6 +13,8 @@ async function main() {
     const categoriesRes: SpeedrunApiResponse<SpeedrunCategory[]> = await fetchLevelCategories(levels[0])
     const categories = categoriesRes.data;
 
+
+
     // this wokrs but sucks
     //let leaderboards: SpeedrunLeaderboard[] = []
     //for (const level of levelsRes.data) {
@@ -21,7 +23,10 @@ async function main() {
     //    }
     //}
     
-    const fullClearFilter = newSubcatFilter("", "")
+    const fullClearFilters = levels.slice(0, 8).map(async (level) => {
+        const variables = await fetchLevelVariables(level);
+        console.log(variables.data[0].name)
+    })
 
     const c = await fetchLevelBoard(levels[0], categories[1])
     console.log(c)

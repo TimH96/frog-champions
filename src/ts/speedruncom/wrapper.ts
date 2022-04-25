@@ -3,6 +3,7 @@ import SpeedrunApiResponse from "./types/SpeedrunApiResponse"
 import SpeedrunCategory from "./types/SpeedrunCategory"
 import SpeedrunLeaderboard from "./types/SpeedrunLeaderboard"
 import SpeedrunLevel from "./types/SpeedrunLevel"
+import SpeedrunVariable from "./types/SpeedrunVariable"
 
 const HREF = "www.speedrun.com";
 const API_VERSION = "v1";
@@ -19,7 +20,7 @@ const fetchLevelCategories = async (level: SpeedrunLevel): Promise<SpeedrunApiRe
     return await (await fetch(`https://${HREF}/api/${API_VERSION}/levels/${level.id}/categories`)).json()
 }
 
-const fetchLevelVariables = async (level: SpeedrunLevel): Promise<SpeedrunApiResponse<SpeedrunCategory[]>> => {
+const fetchLevelVariables = async (level: SpeedrunLevel): Promise<SpeedrunApiResponse<SpeedrunVariable[]>> => {
     return await (await fetch(`https://${HREF}/api/${API_VERSION}/levels/${level.id}/variables`)).json()
 }
 
