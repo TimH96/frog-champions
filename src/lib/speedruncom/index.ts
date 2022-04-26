@@ -69,7 +69,7 @@ const buildPlayerMap = async (grid: LevelGrid): Promise<Map<SpeedrunId, Player>>
                 const r = run.run;
                 const p = r.players[0];
 
-                pMap.has(p.id) || pMap.set(p.id, new Player(gridDimensions))
+                pMap.has(p.id) || pMap.set(p.id, new Player(p.id, gridDimensions))
 
                 const pl = pMap.get(p.id)!;
                 const points = Math.max(500-k, 0)
@@ -92,7 +92,13 @@ const initiateLeaderboard = async () => {
     const grid = await transformGrid(raw);
     const players = await buildPlayerMap(grid);
 
-    console.log(players)
+    const arr = Array.from(players.values()).sort((a, b) => b.totalPoints - a.totalPoints).slice(0, 50)
+    console.log(arr)
+    const names = await Promise.all(arr.map(async (p) => {
+        return await (await fetch(`https://www.speedrun.com/api/v1/users/${p.id}`)).json()
+    }))
+
+    console.log(names.map(n => n.data.names.international))
 }
 
 export default initiateLeaderboard
