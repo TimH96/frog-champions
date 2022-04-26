@@ -1,5 +1,5 @@
 import { COLLECTIBLES_VARIABLE_NAME, FC_RUN_VALUE } from "../constants/subcategories";
-import LevelGrid from "../models/LevelGrid";
+import LevelGrid from "../../models/LevelGrid";
 import SpeedrunLeaderboard from "../response_types/SpeedrunLeaderboard";
 import SpeedrunVariable from "../response_types/SpeedrunVariable";
 

@@ -71,11 +71,15 @@ const buildPlayerMap = async (grid: LevelGrid): Promise<Map<SpeedrunId, Player>>
 
                 pMap.has(p.id) || pMap.set(p.id, new Player(gridDimensions))
 
-                pMap.get(p.id)!.timesPage[i][j] = {
+                const pl = pMap.get(p.id)!;
+                const points = Math.max(500-k, 0)
+                pl.timesPage[i][j] = {
                     run: r,
                     place: k+1,
-                    points: Math.max(500-k, 0)
+                    points,
                 }
+                pl.totalPoints += points;
+                pl.categoryPoints[i] = pl.categoryPoints[i]+points;
             })
         })
     })
