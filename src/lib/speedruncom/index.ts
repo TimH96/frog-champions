@@ -7,12 +7,37 @@ import { fetchLevelCategories, fetchLevelBoard, fetchLevels, fetchLevelVariables
 import { getFilterFullClearRuns, gridTransformationFunction, removeCollectiblesCategory, removeFarewellObsoletes } from "./util/grid-transformation";
 import LevelGrid from "./models/LevelGrid";
 
-const getRawLeaderboardData = async (): Promise<{
+interface RawDataCollection {
     categories: SpeedrunApiResponse<SpeedrunCategory[]>,
     levels: SpeedrunApiResponse<SpeedrunLevel[]>,
     grid: SpeedrunApiResponse<SpeedrunLeaderboard>[][],
     variables: SpeedrunApiResponse<SpeedrunVariable[]>[]
-}> => {
+}
+
+const transformGrid = async (raw: RawDataCollection): Promise<LevelGrid> => {
+    const variables = raw.variables.map((variable) => {
+        return variable.data
+    })
+
+    let grid: LevelGrid = raw.grid.map((categoryRow) => {
+        return categoryRow.map((levelBoard) => {
+            return levelBoard.data
+        })
+    })
+
+    const transformations: gridTransformationFunction[] = [
+        removeFarewellObsoletes,
+        getFilterFullClearRuns(variables), // this is currently unused because collectibles are removed entirely
+        removeCollectiblesCategory,
+    ];
+    transformations.forEach((tFunc: gridTransformationFunction) => {
+        grid = tFunc(grid)
+    })
+
+    return grid
+}
+
+const getRawLeaderboardData = async (): Promise<RawDataCollection> => {
     const levels = await fetchLevels();
     const categories =(await fetchLevelCategories(levels.data[0]));
     const grid = await Promise.all(categories.data.map((cat) => {
@@ -34,25 +59,9 @@ const getRawLeaderboardData = async (): Promise<{
 
 const initiateLeaderboard = async () => {
     const raw = await getRawLeaderboardData();
+    const grid = await transformGrid(raw);
 
-    const variables = raw.variables.map((variable) => {
-        return variable.data
-    })
-
-    let grid: LevelGrid = raw.grid.map((categoryRow) => {
-        return categoryRow.map((levelBoard) => {
-            return levelBoard.data
-        })
-    })
-
-    const transformations: gridTransformationFunction[] = [
-        removeFarewellObsoletes,
-        getFilterFullClearRuns(variables), // this is currently unused because collectibles are removed entirely
-        removeCollectiblesCategory,
-    ];
-    transformations.forEach((tFunc: gridTransformationFunction) => {
-        grid = tFunc(grid)
-    })
+        
 
     console.log(grid)
 
