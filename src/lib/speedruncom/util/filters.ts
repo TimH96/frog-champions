@@ -1,5 +1,5 @@
-import SpeedrunId from "../types/SpeedrunId";
-import SpeedrunRun from "../types/SpeedrunRun";
+import SpeedrunId from "../response_types/SpeedrunId";
+import SpeedrunRun from "../response_types/SpeedrunRun";
 
 type subcatFilterFunction = (run: SpeedrunRun) => boolean;
 

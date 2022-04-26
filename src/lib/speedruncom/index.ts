@@ -1,9 +1,29 @@
-import SpeedrunApiResponse from "./types/SpeedrunApiResponse";
-import SpeedrunCategory from "./types/SpeedrunCategory";
-import SpeedrunLevel from "./types/SpeedrunLevel";
-import SpeedrunRun from "./types/SpeedrunRun";
-import SpeedrunLeaderboard from "./types/SpeedrunLeaderboard";
+import SpeedrunApiResponse from "./response_types/SpeedrunApiResponse";
+import SpeedrunCategory from "./response_types/SpeedrunCategory";
+import SpeedrunLevel from "./response_types/SpeedrunLevel";
+import SpeedrunRun from "./response_types/SpeedrunRun";
+import SpeedrunLeaderboard from "./response_types/SpeedrunLeaderboard";
 import { fetchLevelCategories, fetchLevelBoard, fetchLevels, fetchLevelVariables } from "./util/wrapper";
+
+const getRawLeaderboardData = async (): Promise<{
+    categories: SpeedrunCategory[],
+    levels: SpeedrunLevel[],
+    grid: Array<Array<SpeedrunApiResponse<SpeedrunLeaderboard>>>
+}> => {
+    const levels: SpeedrunLevel[] = await (await fetchLevels()).data;
+    const categories: SpeedrunCategory[] = await (await fetchLevelCategories(levels[0])).data;
+    const leaderboardGridRaw: Array<Array<SpeedrunApiResponse<SpeedrunLeaderboard>>> = await Promise.all(categories.map((cat) => {
+        return Promise.all(levels.map((lvl) => {
+            return fetchLevelBoard(lvl, cat)
+        }))
+    }))
+
+    return {
+        categories,
+        levels,
+        grid: leaderboardGridRaw
+    }
+}
 
 const initiateLeaderboard = async () => {
 
@@ -15,11 +35,8 @@ const initiateLeaderboard = async () => {
     const categoriesRes: SpeedrunApiResponse<SpeedrunCategory[]> = await fetchLevelCategories(levels[0]);
     const categories = categoriesRes.data;
 
-    const baseLevels = levels.slice(0, 8);
-    const farewellLevel = levels[8];
-    
     const leaderboardGridRaw: Array<Array<SpeedrunApiResponse<SpeedrunLeaderboard>>> = await Promise.all(categories.map((cat) => {
-        return Promise.all(baseLevels.map((lvl) => {
+        return Promise.all(levels.map((lvl) => {
             return fetchLevelBoard(lvl, cat)
         }))
     }))
