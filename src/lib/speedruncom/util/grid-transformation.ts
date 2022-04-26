@@ -1,3 +1,4 @@
+import { COLLECTIBLES_VARIABLE_NAME, FC_RUN_VALUE } from "../constants/subcategories";
 import LevelGrid from "../models/LevelGrid";
 import SpeedrunLeaderboard from "../response_types/SpeedrunLeaderboard";
 import SpeedrunVariable from "../response_types/SpeedrunVariable";
@@ -24,8 +25,8 @@ const getFilterFullClearRuns = (variables: SpeedrunVariable[][]): gridTransforma
         if (i === 1 /* only filter runs in the collectibles column */) {
             return levelColumn.map((level, i) => {
                 // find the 2 relevant IDs based on variable name and run value label
-                const variable = variables[i].find((x) => x.name == "Full Clear / ARB / HC")  // TODO think about where to refactor this to
-                const value = Object.entries(variable!.values.values).find(([_key, val]) => val.label === "Full Clear")  // TODO think about where to refactor this to)
+                const variable = variables[i].find((x) => x.name == COLLECTIBLES_VARIABLE_NAME)
+                const value = Object.entries(variable!.values.values).find(([_key, val]) => val.label === FC_RUN_VALUE)
 
                 // throw out if run is of not of given subcategory
                 level.runs = level.runs.filter((run) => 
