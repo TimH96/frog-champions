@@ -39,7 +39,7 @@ const transformGrid = async (raw: RawDataCollection): Promise<LevelGrid> => {
 
 const getRawLeaderboardData = async (): Promise<RawDataCollection> => {
     const levels = await fetchLevels();
-    const categories =(await fetchLevelCategories(levels.data[0]));
+    const categories = (await fetchLevelCategories(levels.data[0]));
     const grid = await Promise.all(categories.data.map((cat) => {
         return Promise.all(levels.data.map((lvl) => {
             return fetchLevelBoard(lvl, cat)
@@ -61,10 +61,7 @@ const initiateLeaderboard = async () => {
     const raw = await getRawLeaderboardData();
     const grid = await transformGrid(raw);
 
-        
-
     console.log(grid)
-
 }
 
 export default initiateLeaderboard
