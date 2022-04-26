@@ -1,9 +1,9 @@
-import { newSubcatFilter } from "./ts/speedruncom/helper";
-import SpeedrunApiResponse from "./ts/speedruncom/types/SpeedrunApiResponse";
-import SpeedrunCategory from "./ts/speedruncom/types/SpeedrunCategory";
-import SpeedrunId from "./ts/speedruncom/types/SpeedrunId";
-import SpeedrunLevel from "./ts/speedruncom/types/SpeedrunLevel";
-import { fetchLevelCategories, fetchLevelBoard, fetchLevels, fetchLevelVariables } from "./ts/speedruncom/wrapper";
+import { newSubcatFilter } from "./lib/speedruncom/helper";
+import SpeedrunApiResponse from "./lib/speedruncom/types/SpeedrunApiResponse";
+import SpeedrunCategory from "./lib/speedruncom/types/SpeedrunCategory";
+import SpeedrunId from "./lib/speedruncom/types/SpeedrunId";
+import SpeedrunLevel from "./lib/speedruncom/types/SpeedrunLevel";
+import { fetchLevelCategories, fetchLevelBoard, fetchLevels, fetchLevelVariables } from "./lib/speedruncom/wrapper";
 
 
 async function main() {
@@ -12,7 +12,6 @@ async function main() {
 
     const categoriesRes: SpeedrunApiResponse<SpeedrunCategory[]> = await fetchLevelCategories(levels[0])
     const categories = categoriesRes.data;
-
 
 
     // this wokrs but sucks
