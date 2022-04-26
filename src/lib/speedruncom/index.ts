@@ -5,8 +5,8 @@ import SpeedrunVariable from "./response_types/SpeedrunVariable";
 import SpeedrunLeaderboard from "./response_types/SpeedrunLeaderboard";
 import { fetchLevelCategories, fetchLevelBoard, fetchLevels, fetchLevelVariables } from "./util/wrapper";
 import { getFilterFullClearRuns, gridTransformationFunction, removeCollectiblesCategory, removeFarewellObsoletes } from "./util/grid-transformation";
-import LevelGrid from "./models/LevelGrid";
-import Player from "./models/Player";
+import LevelGrid from "../models/LevelGrid";
+import Player from "../models/Player";
 import SpeedrunId from "./response_types/SpeedrunId";
 
 interface RawDataCollection {
@@ -61,8 +61,24 @@ const transformGrid = async (raw: RawDataCollection): Promise<LevelGrid> => {
 
 const buildPlayerMap = async (grid: LevelGrid): Promise<Map<SpeedrunId, Player>> => {
     let pMap = new Map<SpeedrunId, Player>()
+    const gridDimensions = grid.map(col => col.length)
 
-    // do stuff
+    grid.forEach((levelColumn, i) => {
+        levelColumn.forEach((board, j) => {
+            board.runs.forEach((run, k) => {
+                const r = run.run;
+                const p = r.players[0];
+
+                pMap.has(p.id) || pMap.set(p.id, new Player(gridDimensions))
+
+                pMap.get(p.id)!.timesPage[i][j] = {
+                    run: r,
+                    place: k+1,
+                    points: Math.max(500-k, 0)
+                }
+            })
+        })
+    })
 
     return pMap;
 }
