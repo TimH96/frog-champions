@@ -32,7 +32,6 @@ const getFilterFullClearRuns = (variables: SpeedrunVariable[][]): gridTransforma
                 level.runs = level.runs.filter((run) => 
                     run.run.values![variable!.id] === value![0]
                 )
-                console.log(level.runs)
 
                 return level
             })
