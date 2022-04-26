@@ -6,12 +6,34 @@ import SpeedrunLeaderboard from "./response_types/SpeedrunLeaderboard";
 import { fetchLevelCategories, fetchLevelBoard, fetchLevels, fetchLevelVariables } from "./util/wrapper";
 import { getFilterFullClearRuns, gridTransformationFunction, removeCollectiblesCategory, removeFarewellObsoletes } from "./util/grid-transformation";
 import LevelGrid from "./models/LevelGrid";
+import Player from "./models/Player";
+import SpeedrunId from "./response_types/SpeedrunId";
 
 interface RawDataCollection {
     categories: SpeedrunApiResponse<SpeedrunCategory[]>,
     levels: SpeedrunApiResponse<SpeedrunLevel[]>,
     grid: SpeedrunApiResponse<SpeedrunLeaderboard>[][],
     variables: SpeedrunApiResponse<SpeedrunVariable[]>[]
+}
+
+const getRawLeaderboardData = async (): Promise<RawDataCollection> => {
+    const levels = await fetchLevels();
+    const categories = (await fetchLevelCategories(levels.data[0]));
+    const grid = await Promise.all(categories.data.map((cat) => {
+        return Promise.all(levels.data.map((lvl) => {
+            return fetchLevelBoard(lvl, cat)
+        }))
+    }))
+    const variables = await Promise.all(levels.data.map((lvl) => {
+        return fetchLevelVariables(lvl)
+    }))
+
+    return {
+        categories,
+        levels,
+        grid,
+        variables,
+    }
 }
 
 const transformGrid = async (raw: RawDataCollection): Promise<LevelGrid> => {
@@ -37,31 +59,20 @@ const transformGrid = async (raw: RawDataCollection): Promise<LevelGrid> => {
     return grid
 }
 
-const getRawLeaderboardData = async (): Promise<RawDataCollection> => {
-    const levels = await fetchLevels();
-    const categories = (await fetchLevelCategories(levels.data[0]));
-    const grid = await Promise.all(categories.data.map((cat) => {
-        return Promise.all(levels.data.map((lvl) => {
-            return fetchLevelBoard(lvl, cat)
-        }))
-    }))
-    const variables = await Promise.all(levels.data.map((lvl) => {
-        return fetchLevelVariables(lvl)
-    }))
+const buildPlayerMap = async (grid: LevelGrid): Promise<Map<SpeedrunId, Player>> => {
+    let pMap = new Map<SpeedrunId, Player>()
 
-    return {
-        categories,
-        levels,
-        grid,
-        variables,
-    }
+    // do stuff
+
+    return pMap;
 }
 
 const initiateLeaderboard = async () => {
     const raw = await getRawLeaderboardData();
     const grid = await transformGrid(raw);
+    const players = await buildPlayerMap(grid);
 
-    console.log(grid)
+    console.log(players)
 }
 
 export default initiateLeaderboard
