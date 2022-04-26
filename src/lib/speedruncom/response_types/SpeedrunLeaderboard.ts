@@ -1,7 +1,7 @@
 import NamedRelLink from "./NamedRelLink";
 import RelLink from "./RelLink";
 import SpeedrunId from "./SpeedrunId";
-import SpeedrunRankedRun from "./SpeedrunRankedRun";
+import SpeedrunRun from "./SpeedrunRun";
 
 export default interface SpeedrunLeaderboard {
     category: SpeedrunId,
@@ -9,5 +9,8 @@ export default interface SpeedrunLeaderboard {
     level: SpeedrunId,
     links: NamedRelLink[],
     weblink: RelLink,
-    runs: SpeedrunRankedRun[],
+    runs: {
+        place: number,
+        run: SpeedrunRun,
+    }[],
 }
