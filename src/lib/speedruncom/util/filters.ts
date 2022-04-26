@@ -1,12 +1,9 @@
 import SpeedrunId from "../response_types/SpeedrunId";
+import SpeedrunLeaderboard from "../response_types/SpeedrunLeaderboard";
 import SpeedrunRun from "../response_types/SpeedrunRun";
 
-type subcatFilterFunction = (run: SpeedrunRun) => boolean;
+type gridReduceFunction = (grid: Array<Array<SpeedrunLeaderboard>>) => Array<Array<SpeedrunLeaderboard>>;
 
-const newSubcatFilter = (subcatId: SpeedrunId, valueId: SpeedrunId): subcatFilterFunction => {
-    return (run: SpeedrunRun) => {
-        return run.values![subcatId] == valueId
-    }
-}
 
-export { newSubcatFilter }
+
+export { gridReduceFunction }
