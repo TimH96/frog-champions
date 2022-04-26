@@ -1,45 +1,60 @@
 import SpeedrunApiResponse from "./response_types/SpeedrunApiResponse";
 import SpeedrunCategory from "./response_types/SpeedrunCategory";
 import SpeedrunLevel from "./response_types/SpeedrunLevel";
-import SpeedrunRun from "./response_types/SpeedrunRun";
+import SpeedrunVariable from "./response_types/SpeedrunVariable";
 import SpeedrunLeaderboard from "./response_types/SpeedrunLeaderboard";
 import { fetchLevelCategories, fetchLevelBoard, fetchLevels, fetchLevelVariables } from "./util/wrapper";
-import { gridReduceFunction } from "./util/filters";
+import { getFilterFullClearRuns, gridTransformationFunction, removeCollectiblesCategory, removeFarewellObsoletes } from "./util/grid-transformation";
+import LevelGrid from "./models/LevelGrid";
 
 const getRawLeaderboardData = async (): Promise<{
-    categories: SpeedrunCategory[],
-    levels: SpeedrunLevel[],
-    grid: Array<Array<SpeedrunApiResponse<SpeedrunLeaderboard>>>
+    categories: SpeedrunApiResponse<SpeedrunCategory[]>,
+    levels: SpeedrunApiResponse<SpeedrunLevel[]>,
+    grid: SpeedrunApiResponse<SpeedrunLeaderboard>[][],
+    variables: SpeedrunApiResponse<SpeedrunVariable[]>[]
 }> => {
-    const levels: SpeedrunLevel[] = await (await fetchLevels()).data;
-    const categories: SpeedrunCategory[] = await (await fetchLevelCategories(levels[0])).data;
-    const leaderboardGridRaw: Array<Array<SpeedrunApiResponse<SpeedrunLeaderboard>>> = await Promise.all(categories.map((cat) => {
-        return Promise.all(levels.map((lvl) => {
+    const levels = await fetchLevels();
+    const categories =(await fetchLevelCategories(levels.data[0]));
+    const grid = await Promise.all(categories.data.map((cat) => {
+        return Promise.all(levels.data.map((lvl) => {
             return fetchLevelBoard(lvl, cat)
         }))
+    }))
+    const variables = await Promise.all(levels.data.map((lvl) => {
+        return fetchLevelVariables(lvl)
     }))
 
     return {
         categories,
         levels,
-        grid: leaderboardGridRaw
+        grid,
+        variables,
     }
 }
 
 const initiateLeaderboard = async () => {
     const raw = await getRawLeaderboardData();
 
-    let leaderboardGrid: Array<Array<SpeedrunLeaderboard>> = raw.grid.map((categoryRow) => {
+    const variables = raw.variables.map((variable) => {
+        return variable.data
+    })
+
+    let grid: LevelGrid = raw.grid.map((categoryRow) => {
         return categoryRow.map((levelBoard) => {
             return levelBoard.data
         })
     })
 
-    const filters: gridReduceFunction[] = [];
-    filters.forEach((filter) => {
-        leaderboardGrid = filter(leaderboardGrid)
+    const transformations: gridTransformationFunction[] = [
+        removeFarewellObsoletes,
+        getFilterFullClearRuns(variables), // this is currently unused because collectibles are removed entirely
+        removeCollectiblesCategory,
+    ];
+    transformations.forEach((tFunc: gridTransformationFunction) => {
+        grid = tFunc(grid)
     })
 
+    console.log(grid)
 
     /*
     const fullClearFilters = levels.slice(0, 8).map(async (level) => {
