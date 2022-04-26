@@ -56,26 +56,6 @@ const initiateLeaderboard = async () => {
 
     console.log(grid)
 
-    /*
-    const fullClearFilters = levels.slice(0, 8).map(async (level) => {
-        const variables = await fetchLevelVariables(level);
-        console.log(variables.data[0].name)
-    })
-
-    const c = await fetchLevelBoard(levels[0], categories[1])
-    console.log(c)
-
-    const d = await fetchLevelBoard(levels[1], categories[1])
-    console.log(d)
-
-    /*
-    const x = await Promise.all(levels.slice(0, 8).map(async (level) => {
-        return categories.map((category) => {
-            return fetchLevelBoard(level, category)
-        })
-    }))
-    console.log(x)
-    */
 }
 
 export default initiateLeaderboard
