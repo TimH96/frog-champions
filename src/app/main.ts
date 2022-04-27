@@ -28,7 +28,7 @@ const main = async () => {
   const arr = Array.from(p.values()).sort((a, b) => b.totalPoints - a.totalPoints).slice(0, 50)
   await Promise.all(arr.map(async (p) => await p.getName()))
 
-  arr.forEach(p => console.log({name: p.name, score: p.totalPoints}))
+  arr.forEach(p => console.log({ name: p.name, score: p.totalPoints }))
 }
 
 export default main

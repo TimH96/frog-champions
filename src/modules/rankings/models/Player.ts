@@ -2,6 +2,7 @@ import SpeedrunId from '../../speedruncom/models/SpeedrunId'
 import SpeedrunRankedRun from '../../speedruncom/models/SpeedrunRankedRun'
 import RankingGrid from './RankingGrid'
 import { fetchUser } from '../../speedruncom/wrapper'
+import { eliteScoring, scoringFunction } from '../scoring'
 
 export default class Player {
   id: SpeedrunId
@@ -10,7 +11,7 @@ export default class Player {
   private _pointsPerColumn: number[]
   private _name: string | null | undefined = undefined
 
-  static scoringFn: (r: SpeedrunRankedRun) => number = (r) => { return Math.max(0, 100 - r.place) }
+  static scoringFn: scoringFunction = eliteScoring
 
   constructor (id: SpeedrunId, gridDimensions: number[]) {
     this.id = id
@@ -36,6 +37,27 @@ export default class Player {
 
   public get totalPoints () {
     return this._pointsPerColumn.reduce((sum, _, i) => sum + this.getPointsOfColumn(i), 0)
+  }
+
+  /**
+   * this getter should be used with caution, preferably when absolutely certain that the name of
+   * a player is already loaded
+   *
+   * otherwise use the async version getName
+   */
+  public get name () {
+    if (this._name) {
+      return this._name
+    }
+
+    fetchUser(this.id).then(val => {
+      const n = val.data.names.international
+      this._name = n
+
+      return n
+    })
+
+    return ''
   }
 
   public async getName () {
