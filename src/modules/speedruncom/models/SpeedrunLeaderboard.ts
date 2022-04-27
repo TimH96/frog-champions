@@ -13,4 +13,4 @@ export default interface SpeedrunLeaderboard {
         place: number,
         run: SpeedrunRun,
     }[],
-};;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+}

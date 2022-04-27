@@ -8,4 +8,4 @@ export default interface SpeedrunLevel {
     links: NamedRelLink[]
     weblink: RelLink
     rules?: string
-};;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+}

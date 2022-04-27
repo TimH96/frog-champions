@@ -15,4 +15,4 @@ export default interface SpeedrunRun {
     submitted: string,
     times: SpeedrunTimes,
     values?: Record<SpeedrunId, SpeedrunId>,
-};;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+}

@@ -3,4 +3,4 @@ export default interface SpeedrunTimes {
     ingame_t: number,
     primary: string,
     primary_t: number,
-};;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+}

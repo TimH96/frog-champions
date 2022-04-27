@@ -11,4 +11,4 @@ export default interface SpeedrunVariable {
     values: {
         values: Record<SpeedrunId, { label: string }>
     }
-};;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+}

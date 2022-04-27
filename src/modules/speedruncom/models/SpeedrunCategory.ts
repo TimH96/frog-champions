@@ -9,4 +9,4 @@ export default interface SpeedrunCategory {
     weblink: RelLink;
     miscellaneous: boolean;
     rules?: string;
-};;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+}
