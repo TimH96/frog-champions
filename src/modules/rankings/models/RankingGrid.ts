@@ -1,4 +1,4 @@
-import RankedRun from './RankedRun'
+import RankedRun from '../../speedruncom/models/RankedRun'
 
 type RankingGrid = RankedRun[][];
 
