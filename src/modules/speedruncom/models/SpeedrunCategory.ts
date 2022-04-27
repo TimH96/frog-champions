@@ -1,6 +1,6 @@
-import NamedRelLink from './NamedRelLink';
-import RelLink from './RelLink';
-import SpeedrunId from './SpeedrunId';
+import NamedRelLink from './NamedRelLink'
+import RelLink from './RelLink'
+import SpeedrunId from './SpeedrunId'
 
 export default interface SpeedrunCategory {
     id: SpeedrunId;
@@ -9,4 +9,4 @@ export default interface SpeedrunCategory {
     weblink: RelLink;
     miscellaneous: boolean;
     rules?: string;
-};
+};;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

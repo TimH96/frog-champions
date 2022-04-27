@@ -1,7 +1,7 @@
-import RelLink from './RelLink';
-import SpeedrunId from './SpeedrunId';
-import SpeedrunPlayer from './SpeedrunPlayer';
-import SpeedrunTimes from './SpeedrunTimes';
+import RelLink from './RelLink'
+import SpeedrunId from './SpeedrunId'
+import SpeedrunPlayer from './SpeedrunPlayer'
+import SpeedrunTimes from './SpeedrunTimes'
 
 export default interface SpeedrunRun {
     id: SpeedrunId,
@@ -15,4 +15,4 @@ export default interface SpeedrunRun {
     submitted: string,
     times: SpeedrunTimes,
     values?: Record<SpeedrunId, SpeedrunId>,
-};
+};;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

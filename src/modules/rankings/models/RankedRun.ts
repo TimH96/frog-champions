@@ -1,7 +1,7 @@
-import SpeedrunRun from '../../speedruncom/models/SpeedrunRun';
+import SpeedrunRun from '../../speedruncom/models/SpeedrunRun'
 
 export default interface RankedRun {
     place: number,
     points: number,
     run: SpeedrunRun,
-}
+};;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

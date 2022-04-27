@@ -1,5 +1,5 @@
-import SpeedrunLeaderboard from './SpeedrunLeaderboard';
+import SpeedrunLeaderboard from './SpeedrunLeaderboard'
 
 type LevelGrid = SpeedrunLeaderboard[][];
 
-export default LevelGrid;
+export default LevelGrid

@@ -1,3 +1,3 @@
 type SpeedrunId = string;
 
-export default SpeedrunId;
+export default SpeedrunId

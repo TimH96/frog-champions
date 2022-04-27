@@ -1,3 +1,3 @@
 type RelLink = string;
 
-export default RelLink;
+export default RelLink
