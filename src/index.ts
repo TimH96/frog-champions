@@ -1,7 +1,3 @@
-import initiateLeaderboard from "./lib/speedruncom";
+import main from "./app/main";
 
-async function main() {
-    await initiateLeaderboard()
-}
-
-main()
+main();

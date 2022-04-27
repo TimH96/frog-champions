@@ -1,7 +1,7 @@
-import { COLLECTIBLES_VARIABLE_NAME, FC_RUN_VALUE } from "../constants/subcategories";
-import LevelGrid from "../../models/LevelGrid";
-import SpeedrunLeaderboard from "../response_types/SpeedrunLeaderboard";
-import SpeedrunVariable from "../response_types/SpeedrunVariable";
+import { COLLECTIBLES_VARIABLE_NAME, FC_RUN_VALUE } from "./constants/subcategories";
+import LevelGrid from "./models/LevelGrid";
+import SpeedrunLeaderboard from "./models/SpeedrunLeaderboard";
+import SpeedrunVariable from "./models/SpeedrunVariable";
 
 /** function that transforms a LevelGrid in some way */
 type gridTransformationFunction = (grid: LevelGrid) => LevelGrid;
@@ -9,9 +9,7 @@ type gridTransformationFunction = (grid: LevelGrid) => LevelGrid;
 /** returns a gridTransformationFunction, using the given callback function in grid.map */
 const getGridMapTransformation = (func: (levelColumn: SpeedrunLeaderboard[], i: number) => SpeedrunLeaderboard[]): gridTransformationFunction => {
     return (grid: LevelGrid): LevelGrid => {
-        return grid.map((levelColumn, i) => {
-            return func(levelColumn, i)
-        })
+        return grid.map((levelColumn, i) => func(levelColumn, i))
     }
 }
 
@@ -54,6 +52,5 @@ const removeFarewellObsoletes = (grid: LevelGrid): LevelGrid => {
 
     return getGridMapTransformation(callback)(grid)
 };
-
 
 export { gridTransformationFunction, getGridMapTransformation, removeCollectiblesCategory, getFilterFullClearRuns, removeFarewellObsoletes }

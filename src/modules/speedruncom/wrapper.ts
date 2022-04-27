@@ -1,9 +1,9 @@
-import { GAME_ID } from "../constants/celeste"
-import SpeedrunApiResponse from "../response_types/SpeedrunApiResponse"
-import SpeedrunCategory from "../response_types/SpeedrunCategory"
-import SpeedrunLeaderboard from "../response_types/SpeedrunLeaderboard"
-import SpeedrunLevel from "../response_types/SpeedrunLevel"
-import SpeedrunVariable from "../response_types/SpeedrunVariable"
+import { GAME_ID } from "./constants/celeste"
+import SpeedrunApiResponse from "./models/SpeedrunApiResponse"
+import SpeedrunCategory from "./models/SpeedrunCategory"
+import SpeedrunLeaderboard from "./models/SpeedrunLeaderboard"
+import SpeedrunLevel from "./models/SpeedrunLevel"
+import SpeedrunVariable from "./models/SpeedrunVariable"
 
 const HREF = "www.speedrun.com";
 const API_VERSION = "v1";

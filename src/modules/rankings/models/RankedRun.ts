@@ -1,4 +1,4 @@
-import SpeedrunRun from "../speedruncom/response_types/SpeedrunRun";
+import SpeedrunRun from "../../speedruncom/models/SpeedrunRun";
 
 export default interface RankedRun {
     place: number,

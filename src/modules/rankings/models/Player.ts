@@ -1,4 +1,4 @@
-import SpeedrunId from "../speedruncom/response_types/SpeedrunId";
+import SpeedrunId from "../../speedruncom/models/SpeedrunId";
 import RankedRun from "./RankedRun";
 import RankingGrid from "./RankingGrid";
 
