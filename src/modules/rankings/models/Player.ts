@@ -1,5 +1,5 @@
 import SpeedrunId from '../../speedruncom/models/SpeedrunId'
-import RankedRun from '../../speedruncom/models/RankedRun'
+import SpeedrunRankedRun from '../../speedruncom/models/SpeedrunRankedRun'
 import RankingGrid from './RankingGrid'
 import { fetchUser } from '../../speedruncom/wrapper'
 
@@ -10,16 +10,16 @@ export default class Player {
   private _pointsPerColumn: number[]
   private _name: string | null | undefined = undefined
 
-  static scoringFn: (r: RankedRun) => number = (r) => { return Math.max(0, 100 - r.place) }
+  static scoringFn: (r: SpeedrunRankedRun) => number = (r) => { return Math.max(0, 100 - r.place) }
 
   constructor (id: SpeedrunId, gridDimensions: number[]) {
     this.id = id
-    this.timesPage = gridDimensions.map((colSize) => new Array<RankedRun>(colSize))
+    this.timesPage = gridDimensions.map((colSize) => new Array<SpeedrunRankedRun>(colSize))
     this._pointsPerColumn = gridDimensions.map((_) => 0)
   }
 
   /** register run r in the grid at position i, j */
-  registerRun (r: RankedRun, i: number, j: number) {
+  registerRun (r: SpeedrunRankedRun, i: number, j: number) {
     this.timesPage[i][j] = r
   }
 

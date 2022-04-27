@@ -25,12 +25,9 @@ const main = async () => {
   })()
 
   const arr = Array.from(p.values()).sort((a, b) => b.totalPoints - a.totalPoints).slice(0, 50)
-  console.log(arr)
-  const names = await Promise.all(arr.map(async (p) => {
-    return await (await fetch(`https://www.speedrun.com/api/v1/users/${p.id}`)).json()
-  }))
 
-  console.log(names.map((n) => n.data.names.international))
+  console.log(await Promise.all(arr.map(async (p) => await p.getName())))
+  console.log(await Promise.all(arr.map(async (p) => await p.getName())))
 }
 
 export default main
