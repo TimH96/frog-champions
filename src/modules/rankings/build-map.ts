@@ -11,7 +11,9 @@ const buildPlayerMap = async (grid: LevelGrid): Promise<Map<SpeedrunId, Player>>
       board.runs.forEach((r) => {
         const p = r.run.players[0]
 
-        p.id && pMap.has(p.id) || pMap.set(p.id, new Player(p.id, gridDimensions))
+        // if a player has an id and is not already in the map, add them
+        // only deleted accounts will not have an id
+        p.id && (pMap.has(p.id) || pMap.set(p.id, new Player(p.id, gridDimensions)))
 
         const pl = pMap.get(p.id)!
         pl.registerRun(r, i, j)
