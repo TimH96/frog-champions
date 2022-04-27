@@ -4,7 +4,7 @@ import { getFilterFullClearRuns, gridTransformationFunction, removeCollectiblesC
 import buildPlayerMap from '../modules/rankings/build-map'
 
 const main = async () => {
-  const p = await (async () => {
+  const pMap = await (async () => {
     // fetch data
     const raw = await getRawLeaderboardData()
 
@@ -25,10 +25,10 @@ const main = async () => {
   })()
 
   // testing script
-  const arr = Array.from(p.values()).sort((a, b) => b.totalPoints - a.totalPoints).slice(0, 50)
+  const arr = Array.from(pMap.values()).sort((a, b) => b.getPointsOfColumn(2) - a.getPointsOfColumn(2)).slice(0, 50)
   await Promise.all(arr.map(async (p) => await p.getName()))
 
-  arr.forEach(p => console.log({ name: p.name, score: p.totalPoints }))
+  arr.forEach(p => console.log({ name: p.name, score: p.getPointsOfColumn(2) }))
 }
 
 export default main
