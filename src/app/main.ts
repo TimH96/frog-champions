@@ -25,10 +25,10 @@ const main = async () => {
   })()
 
   // testing script
-  const arr = Array.from(pMap.values()).sort((a, b) => b.getPointsOfColumn(2) - a.getPointsOfColumn(2)).slice(0, 50)
+  const arr = Array.from(pMap.values()).sort((a, b) => b.totalPoints - a.totalPoints).slice(0, 50)
   await Promise.all(arr.map(async (p) => await p.getName()))
 
-  arr.forEach(p => console.log({ name: p.name, score: p.getPointsOfColumn(2) }))
+  arr.forEach(p => console.log({ name: p.name, score: p.totalPoints, id: p.id }))
 }
 
 export default main
