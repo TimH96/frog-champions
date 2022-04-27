@@ -1,4 +1,4 @@
-import RankedRun from "./RankedRun";
+import RankedRun from './RankedRun';
 
 type RankingGrid = RankedRun[][];
 

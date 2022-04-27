@@ -1,6 +1,6 @@
-import NamedRelLink from "./NamedRelLink";
-import RelLink from "./RelLink";
-import SpeedrunId from "./SpeedrunId";
+import NamedRelLink from './NamedRelLink';
+import RelLink from './RelLink';
+import SpeedrunId from './SpeedrunId';
 
 export default interface SpeedrunLevel {
     id: SpeedrunId;
@@ -8,4 +8,4 @@ export default interface SpeedrunLevel {
     links: NamedRelLink[];
     weblink: RelLink;
     rules?: string;
-}
+};

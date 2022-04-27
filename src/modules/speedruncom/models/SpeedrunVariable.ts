@@ -1,5 +1,5 @@
-import NamedRelLink from "./NamedRelLink";
-import SpeedrunId from "./SpeedrunId";
+import NamedRelLink from './NamedRelLink';
+import SpeedrunId from './SpeedrunId';
 
 export default interface SpeedrunVariable {
     id: SpeedrunId,
@@ -11,4 +11,4 @@ export default interface SpeedrunVariable {
     values: {
         values: Record<SpeedrunId, { label: string }>
     }
-}
+};

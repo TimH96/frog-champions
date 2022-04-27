@@ -1,6 +1,6 @@
-import SpeedrunId from "../models/SpeedrunId";
+import SpeedrunId from '../models/SpeedrunId';
 
-const GAME_ID: SpeedrunId = "o1y9j9v6"
-const GAME_NAME: string = "Celeste"
+const GAME_ID: SpeedrunId = 'o1y9j9v6';
+const GAME_NAME = 'Celeste';
 
-export { GAME_ID, GAME_NAME }
+export {GAME_ID, GAME_NAME};
