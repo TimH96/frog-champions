@@ -1,6 +1,7 @@
 import AppState from '../models/AppState'
-import { getSliceParameters, getSorterFunction } from './array-helper'
+import { getSorterFunction } from './array-helper'
 import getControlButtons from './components/control-buttons'
+import getLoadMoreButton from './components/load-more-button'
 import getLoader from './components/loader'
 
 const renderDynamicContainer = async (state: AppState): Promise<void> => {
@@ -15,7 +16,7 @@ const renderDynamicContainer = async (state: AppState): Promise<void> => {
   // arrange data based on state
   const arr = Array.from(state.players.values())
     .sort(getSorterFunction(state))
-    .slice(...getSliceParameters(state))
+    .slice(0, state.tableState)
 
   // load all names
   await Promise.all(arr.map(async (p) => await p.getName()))
@@ -26,7 +27,9 @@ const renderDynamicContainer = async (state: AppState): Promise<void> => {
   // render dynamic container based on state
   container!.appendChild(getControlButtons(state))
   // render table
-  // render load more button
+  container!.appendChild(getLoadMoreButton(state, state.players.size))
+
+  console.log(arr)
 }
 
 export default renderDynamicContainer

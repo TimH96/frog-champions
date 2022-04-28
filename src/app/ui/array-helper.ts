@@ -5,11 +5,6 @@
 import Player from '../../modules/rankings/models/Player'
 import AppState from '../models/AppState'
 import TableSelection from '../models/TableSelection'
-import TableState from '../models/TableState'
-
-const getSliceParameters = (s: AppState) => {
-  return (s.tableState === TableState.TOP_100) ? [0, 100] : [0]
-}
 
 const getSorterFunction = (s: AppState) => {
   switch (s.tableSelection) {
@@ -30,4 +25,4 @@ const getSorterFunction = (s: AppState) => {
   }
 }
 
-export { getSliceParameters, getSorterFunction }
+export { getSorterFunction }

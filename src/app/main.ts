@@ -6,7 +6,6 @@ import AppState from './models/AppState'
 import AppEvent from './models/AppEvent'
 import renderDynamicContainer from './ui/render-dynamic'
 import TableSelection from './models/TableSelection'
-import TableState from './models/TableState'
 
 const main = async () => {
   const pMap = await (async () => {
@@ -32,7 +31,7 @@ const main = async () => {
   const initialState: AppState = {
     players: pMap,
     tableSelection: TableSelection.TOTAL,
-    tableState: TableState.TOP_100
+    tableState: 100
   }
 
   document.addEventListener(AppEvent.UPDATE_STATE, ((e: CustomEvent<AppState>) => {
