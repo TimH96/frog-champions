@@ -1,6 +1,7 @@
 import AppState from '../models/AppState'
 import { getSorterFunction } from './array-helper'
 import getControlButtons from './components/control-buttons'
+import getLeaderboardTable from './components/leaderboard-table'
 import getLoadMoreButton from './components/load-more-button'
 import getLoader from './components/loader'
 
@@ -26,7 +27,7 @@ const renderDynamicContainer = async (state: AppState): Promise<void> => {
 
   // render dynamic container based on state
   container!.appendChild(getControlButtons(state))
-  // render table
+  container!.appendChild(getLeaderboardTable(arr))
   container!.appendChild(getLoadMoreButton(state, state.players.size))
 
   console.log(arr)
