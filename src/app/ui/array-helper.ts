@@ -4,25 +4,11 @@
 
 import Player from '../../modules/rankings/models/Player'
 import AppState from '../models/AppState'
-import TableSelection from '../models/TableSelection'
+import getPointsGetter from './points-getter'
 
 const getSorterFunction = (s: AppState) => {
-  switch (s.tableSelection) {
-    case TableSelection.TOTAL:
-      return (a: Player, b: Player) => b.totalPoints - a.totalPoints
-
-    case TableSelection.A_SIDES:
-      return (a: Player, b: Player) => b.getPointsOfColumn(0) - a.getPointsOfColumn(0)
-
-    case TableSelection.B_SIDES:
-      return (a: Player, b: Player) => b.getPointsOfColumn(1) - a.getPointsOfColumn(1)
-
-    case TableSelection.C_SIDES:
-      return (a: Player, b: Player) => b.getPointsOfColumn(2) - a.getPointsOfColumn(2)
-
-    default:
-      return (a: Player, b: Player) => b.totalPoints - a.totalPoints
-  }
+  const getter = getPointsGetter(s.tableSelection)
+  return (a: Player, b: Player) => getter(b) - getter(a)
 }
 
 export { getSorterFunction }
