@@ -27,3 +27,7 @@ h2 {
   justify-content: center;
   margin: auto;
 }
+
+#footer {
+  margin-bottom: 3em;
+}
