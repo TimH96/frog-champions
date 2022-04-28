@@ -1,25 +1,28 @@
-import AppEvent from '../models/AppEvent'
 import AppState from '../models/AppState'
+import getControlButtons from './components/control-buttons'
+import getLoader from './components/loader'
 
 const renderDynamicContainer = async (state: AppState): Promise<void> => {
   const container = document.getElementById('dynamic-container')
-  container!.innerHTML = ''
+  const reset = () => { container!.innerHTML = '' }
 
-  // loading circle
+  reset()
 
-  // render button list
+  // add loader
+  container!.appendChild(getLoader())
 
+  // arrange data
+  // const arr = Array.from(state.players.values())
+  //  .sort((a, b) => b.totalPoints - a.totalPoints)
+  //  .slice(0, 50)
+
+  // remove loader
+  reset()
+
+  // render dynamic container based on state
+  container!.appendChild(getControlButtons(state))
   // render table
-
   // render load more button
-
-  const btn = document.createElement('BUTTON')
-
-  btn.addEventListener('click', () => {
-    document.dispatchEvent(new CustomEvent<AppState>(AppEvent.UPDATE_STATE, { detail: state }))
-  })
-
-  document.getElementById('dynamic-container')!.appendChild(btn)
 }
 
 export default renderDynamicContainer
