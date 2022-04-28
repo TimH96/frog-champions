@@ -931,9 +931,10 @@ function () {
 
   Player.prototype.getName = function () {
     return __awaiter(this, void 0, void 0, function () {
-      var n;
-      return __generator(this, function (_a) {
-        switch (_a.label) {
+      var n, _a;
+
+      return __generator(this, function (_b) {
+        switch (_b.label) {
           case 0:
             if (this._name) {
               return [2
@@ -941,21 +942,38 @@ function () {
               , this._name];
             }
 
+            _b.label = 1;
+
+          case 1:
+            _b.trys.push([1, 4,, 5]);
+
             return [4
             /*yield*/
             , wrapper_1.fetchUser(this.id)];
 
-          case 1:
+          case 2:
             return [4
             /*yield*/
-            , _a.sent().data.names.international];
+            , _b.sent().data.names.international];
 
-          case 2:
-            n = _a.sent();
+          case 3:
+            n = _b.sent();
             this._name = n;
+            return [3
+            /*break*/
+            , 5];
+
+          case 4:
+            _a = _b.sent();
+            this._name = "UNLOADED: " + this.id;
+            return [3
+            /*break*/
+            , 5];
+
+          case 5:
             return [2
             /*return*/
-            , n];
+            , this._name];
         }
       });
     });
@@ -1151,7 +1169,491 @@ var buildPlayerMap = function buildPlayerMap(grid) {
 };
 
 exports.default = buildPlayerMap;
-},{"./models/Player":"modules/rankings/models/Player.ts"}],"app/main.ts":[function(require,module,exports) {
+},{"./models/Player":"modules/rankings/models/Player.ts"}],"app/models/AppEvent.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+/* eslint-disable no-unused-vars */
+
+var AppEvent;
+
+(function (AppEvent) {
+  AppEvent["UPDATE_STATE"] = "updateState";
+})(AppEvent || (AppEvent = {}));
+
+exports.default = AppEvent;
+},{}],"app/models/TableSelection.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+/* eslint-disable no-unused-vars */
+
+var TableSelection;
+
+(function (TableSelection) {
+  TableSelection["TOTAL"] = "Total";
+  TableSelection["A_SIDES"] = "A-Sides";
+  TableSelection["B_SIDES"] = "B-Sides";
+  TableSelection["C_SIDES"] = "C-Sides";
+})(TableSelection || (TableSelection = {}));
+
+exports.default = TableSelection;
+},{}],"app/ui/points-getter.ts":[function(require,module,exports) {
+"use strict";
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var TableSelection_1 = __importDefault(require("../models/TableSelection"));
+
+var getPointsGetter = function getPointsGetter(sel) {
+  switch (sel) {
+    case TableSelection_1.default.TOTAL:
+      return function (p) {
+        return p.totalPoints;
+      };
+
+    case TableSelection_1.default.A_SIDES:
+      return function (p) {
+        return p.getPointsOfColumn(0);
+      };
+
+    case TableSelection_1.default.B_SIDES:
+      return function (p) {
+        return p.getPointsOfColumn(1);
+      };
+
+    case TableSelection_1.default.C_SIDES:
+      return function (p) {
+        return p.getPointsOfColumn(2);
+      };
+
+    default:
+      return function (p) {
+        return p.totalPoints;
+      };
+  }
+};
+
+exports.default = getPointsGetter;
+},{"../models/TableSelection":"app/models/TableSelection.ts"}],"app/ui/array-helper.ts":[function(require,module,exports) {
+"use strict";
+/**
+ * collection of functions to help transform the player array based on user input
+ */
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var points_getter_1 = __importDefault(require("./points-getter"));
+
+var getSorterFunction = function getSorterFunction(s) {
+  var getter = points_getter_1.default(s.tableSelection);
+  return function (a, b) {
+    return getter(b) - getter(a);
+  };
+};
+
+exports.getSorterFunction = getSorterFunction;
+},{"./points-getter":"app/ui/points-getter.ts"}],"app/ui/components/control-buttons.ts":[function(require,module,exports) {
+"use strict";
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var AppEvent_1 = __importDefault(require("../../models/AppEvent"));
+
+var TableSelection_1 = __importDefault(require("../../models/TableSelection"));
+
+var getCallback = function getCallback(s, type) {
+  return function () {
+    s.tableSelection = type;
+    document.dispatchEvent(new CustomEvent(AppEvent_1.default.UPDATE_STATE, {
+      detail: s
+    }));
+  };
+};
+
+var getButton = function getButton(s, type) {
+  var btn = document.createElement('button');
+  btn.innerHTML = type;
+  btn.disabled = type === s.tableSelection;
+  btn.addEventListener('click', getCallback(s, type));
+  return btn;
+};
+
+var getControlButtons = function getControlButtons(s) {
+  var l = document.createElement('li');
+  l.classList.add('control-buttons');
+  var selections = [TableSelection_1.default.TOTAL, TableSelection_1.default.A_SIDES, TableSelection_1.default.B_SIDES, TableSelection_1.default.C_SIDES];
+
+  for (var _i = 0, selections_1 = selections; _i < selections_1.length; _i++) {
+    var type = selections_1[_i];
+    l.appendChild(getButton(s, type));
+  }
+
+  return l;
+};
+
+exports.default = getControlButtons;
+},{"../../models/AppEvent":"app/models/AppEvent.ts","../../models/TableSelection":"app/models/TableSelection.ts"}],"app/ui/html-helper.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var htmlToElement = function htmlToElement(html) {
+  var template = document.createElement('template');
+  html = html.trim();
+  template.innerHTML = html;
+  return template.content.firstChild;
+};
+
+exports.default = htmlToElement;
+},{}],"app/ui/components/leaderboard-table.ts":[function(require,module,exports) {
+"use strict";
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var html_helper_1 = __importDefault(require("../html-helper"));
+
+var points_getter_1 = __importDefault(require("../points-getter"));
+
+var getTableElement = function getTableElement(place, name, points) {
+  return html_helper_1.default("\n        <tr>\n            <td>" + place + "</td>\n            <td>" + name + "</td>\n            <td>" + points + "</td>\n        </tr>\n    ");
+};
+
+var getTableHeader = function getTableHeader(place, name, points) {
+  return html_helper_1.default("\n        <tr>\n            <th>" + place + "</th>\n            <th>" + name + "</th>\n            <th>" + points + "</th>\n        </tr>\n    ");
+};
+
+var getLeaderboardTable = function getLeaderboardTable(s, arr) {
+  var t = document.createElement('table');
+  var getter = points_getter_1.default(s.tableSelection);
+  t.classList.add('leaderboard-table');
+  var head = getTableHeader('Place', 'Name', 'Points');
+  t.appendChild(head);
+  arr.forEach(function (p, i) {
+    return t.appendChild(getTableElement(i + 1, p.name, getter(p)));
+  });
+  return t;
+};
+
+exports.default = getLeaderboardTable;
+},{"../html-helper":"app/ui/html-helper.ts","../points-getter":"app/ui/points-getter.ts"}],"app/ui/components/load-more-button.ts":[function(require,module,exports) {
+"use strict";
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var AppEvent_1 = __importDefault(require("../../models/AppEvent"));
+
+var getLoadMoreButton = function getLoadMoreButton(s, max) {
+  if (s.tableState >= max) {
+    return document.createElement('div');
+  }
+
+  var d = document.createElement('div');
+  d.classList.add('center');
+  var btn = document.createElement('button');
+  btn.innerHTML = 'Load 50 more ...';
+  btn.addEventListener('click', function () {
+    s.tableState = s.tableState + 50;
+    document.dispatchEvent(new CustomEvent(AppEvent_1.default.UPDATE_STATE, {
+      detail: s
+    }));
+  });
+  d.appendChild(btn);
+  return d;
+};
+
+exports.default = getLoadMoreButton;
+},{"../../models/AppEvent":"app/models/AppEvent.ts"}],"app/ui/components/loader.ts":[function(require,module,exports) {
+"use strict";
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var html_helper_1 = __importDefault(require("../html-helper"));
+
+var getLoader = function getLoader() {
+  return html_helper_1.default('<div class="loader center">Loading...</div>');
+};
+
+exports.default = getLoader;
+},{"../html-helper":"app/ui/html-helper.ts"}],"app/ui/render-dynamic.ts":[function(require,module,exports) {
+"use strict";
+
+var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, generator) {
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+
+    function step(result) {
+      result.done ? resolve(result.value) : new P(function (resolve) {
+        resolve(result.value);
+      }).then(fulfilled, rejected);
+    }
+
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+
+var __generator = this && this.__generator || function (thisArg, body) {
+  var _ = {
+    label: 0,
+    sent: function sent() {
+      if (t[0] & 1) throw t[1];
+      return t[1];
+    },
+    trys: [],
+    ops: []
+  },
+      f,
+      y,
+      t,
+      g;
+  return g = {
+    next: verb(0),
+    "throw": verb(1),
+    "return": verb(2)
+  }, typeof Symbol === "function" && (g[Symbol.iterator] = function () {
+    return this;
+  }), g;
+
+  function verb(n) {
+    return function (v) {
+      return step([n, v]);
+    };
+  }
+
+  function step(op) {
+    if (f) throw new TypeError("Generator is already executing.");
+
+    while (_) {
+      try {
+        if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+        if (y = 0, t) op = [op[0] & 2, t.value];
+
+        switch (op[0]) {
+          case 0:
+          case 1:
+            t = op;
+            break;
+
+          case 4:
+            _.label++;
+            return {
+              value: op[1],
+              done: false
+            };
+
+          case 5:
+            _.label++;
+            y = op[1];
+            op = [0];
+            continue;
+
+          case 7:
+            op = _.ops.pop();
+
+            _.trys.pop();
+
+            continue;
+
+          default:
+            if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) {
+              _ = 0;
+              continue;
+            }
+
+            if (op[0] === 3 && (!t || op[1] > t[0] && op[1] < t[3])) {
+              _.label = op[1];
+              break;
+            }
+
+            if (op[0] === 6 && _.label < t[1]) {
+              _.label = t[1];
+              t = op;
+              break;
+            }
+
+            if (t && _.label < t[2]) {
+              _.label = t[2];
+
+              _.ops.push(op);
+
+              break;
+            }
+
+            if (t[2]) _.ops.pop();
+
+            _.trys.pop();
+
+            continue;
+        }
+
+        op = body.call(thisArg, _);
+      } catch (e) {
+        op = [6, e];
+        y = 0;
+      } finally {
+        f = t = 0;
+      }
+    }
+
+    if (op[0] & 5) throw op[1];
+    return {
+      value: op[0] ? op[1] : void 0,
+      done: true
+    };
+  }
+};
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+var _this = this;
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var array_helper_1 = require("./array-helper");
+
+var control_buttons_1 = __importDefault(require("./components/control-buttons"));
+
+var leaderboard_table_1 = __importDefault(require("./components/leaderboard-table"));
+
+var load_more_button_1 = __importDefault(require("./components/load-more-button"));
+
+var loader_1 = __importDefault(require("./components/loader"));
+
+var renderDynamicContainer = function renderDynamicContainer(state) {
+  return __awaiter(_this, void 0, Promise, function () {
+    var container, reset, arr;
+
+    var _this = this;
+
+    return __generator(this, function (_a) {
+      switch (_a.label) {
+        case 0:
+          container = document.getElementById('dynamic-container');
+
+          reset = function reset() {
+            container.innerHTML = '';
+          };
+
+          reset(); // add loader as arranging array might include loading player names
+
+          container.appendChild(loader_1.default());
+          arr = Array.from(state.players.values()).sort(array_helper_1.getSorterFunction(state)).slice(0, state.tableState); // load all names
+
+          return [4
+          /*yield*/
+          , Promise.all(arr.map(function (p) {
+            return __awaiter(_this, void 0, void 0, function () {
+              return __generator(this, function (_a) {
+                switch (_a.label) {
+                  case 0:
+                    return [4
+                    /*yield*/
+                    , p.getName()];
+
+                  case 1:
+                    return [2
+                    /*return*/
+                    , _a.sent()];
+                }
+              });
+            });
+          })) // remove loader again
+          ];
+
+        case 1:
+          // load all names
+          _a.sent(); // remove loader again
+
+
+          reset(); // render dynamic container based on state
+
+          container.appendChild(control_buttons_1.default(state));
+          container.appendChild(leaderboard_table_1.default(state, arr));
+          container.appendChild(load_more_button_1.default(state, state.players.size));
+          return [2
+          /*return*/
+          ];
+      }
+    });
+  });
+};
+
+exports.default = renderDynamicContainer;
+},{"./array-helper":"app/ui/array-helper.ts","./components/control-buttons":"app/ui/components/control-buttons.ts","./components/leaderboard-table":"app/ui/components/leaderboard-table.ts","./components/load-more-button":"app/ui/components/load-more-button.ts","./components/loader":"app/ui/components/loader.ts"}],"app/main.ts":[function(require,module,exports) {
 "use strict";
 
 var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, generator) {
@@ -1311,9 +1813,15 @@ var grid_transformation_1 = require("../modules/speedruncom/grid-transformation"
 
 var build_map_1 = __importDefault(require("../modules/rankings/build-map"));
 
+var AppEvent_1 = __importDefault(require("./models/AppEvent"));
+
+var render_dynamic_1 = __importDefault(require("./ui/render-dynamic"));
+
+var TableSelection_1 = __importDefault(require("./models/TableSelection"));
+
 var main = function main() {
   return __awaiter(_this, void 0, void 0, function () {
-    var pMap, arr;
+    var pMap, initialState;
 
     var _this = this;
 
@@ -1359,44 +1867,25 @@ var main = function main() {
                 }
               });
             });
-          }() // testing script
-          ];
+          }()];
 
         case 1:
           pMap = _a.sent();
-          arr = Array.from(pMap.values()).sort(function (a, b) {
-            return b.totalPoints - a.totalPoints;
-          }).slice(0, 50);
+          initialState = {
+            players: pMap,
+            tableSelection: TableSelection_1.default.TOTAL,
+            tableState: 100
+          };
+          document.addEventListener(AppEvent_1.default.UPDATE_STATE, function (e) {
+            render_dynamic_1.default(e.detail); // eslint-disable-next-line no-undef
+          });
           return [4
           /*yield*/
-          , Promise.all(arr.map(function (p) {
-            return __awaiter(_this, void 0, void 0, function () {
-              return __generator(this, function (_a) {
-                switch (_a.label) {
-                  case 0:
-                    return [4
-                    /*yield*/
-                    , p.getName()];
-
-                  case 1:
-                    return [2
-                    /*return*/
-                    , _a.sent()];
-                }
-              });
-            });
-          }))];
+          , render_dynamic_1.default(initialState)];
 
         case 2:
           _a.sent();
 
-          arr.forEach(function (p) {
-            return console.log({
-              name: p.name,
-              score: p.totalPoints,
-              id: p.id
-            });
-          });
           return [2
           /*return*/
           ];
@@ -1406,7 +1895,7 @@ var main = function main() {
 };
 
 exports.default = main;
-},{"../modules/speedruncom/get-data":"modules/speedruncom/get-data.ts","../modules/speedruncom/grid-transformation":"modules/speedruncom/grid-transformation.ts","../modules/rankings/build-map":"modules/rankings/build-map.ts"}],"index.ts":[function(require,module,exports) {
+},{"../modules/speedruncom/get-data":"modules/speedruncom/get-data.ts","../modules/speedruncom/grid-transformation":"modules/speedruncom/grid-transformation.ts","../modules/rankings/build-map":"modules/rankings/build-map.ts","./models/AppEvent":"app/models/AppEvent.ts","./ui/render-dynamic":"app/ui/render-dynamic.ts","./models/TableSelection":"app/models/TableSelection.ts"}],"index.ts":[function(require,module,exports) {
 "use strict";
 
 var __importDefault = this && this.__importDefault || function (mod) {
@@ -1450,7 +1939,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65384" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55462" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
