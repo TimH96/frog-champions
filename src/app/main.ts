@@ -2,6 +2,9 @@ import LevelGrid from '../modules/speedruncom/models/LevelGrid'
 import { getRawLeaderboardData } from '../modules/speedruncom/get-data'
 import { getFilterFullClearRuns, gridTransformationFunction, removeCollectiblesCategory, removeFarewellObsoletes } from '../modules/speedruncom/grid-transformation'
 import buildPlayerMap from '../modules/rankings/build-map'
+import AppState from './models/AppState'
+import AppEvent from './models/AppEvent'
+import renderDynamicContainer from './ui/render-dynamic'
 
 const main = async () => {
   const pMap = await (async () => {
@@ -24,11 +27,16 @@ const main = async () => {
     return await buildPlayerMap(grid)
   })()
 
-  // testing script
-  const arr = Array.from(pMap.values()).sort((a, b) => b.totalPoints - a.totalPoints).slice(0, 50)
-  await Promise.all(arr.map(async (p) => await p.getName()))
+  const initialState: AppState = {
+    players: pMap
+  }
 
-  arr.forEach(p => console.log({ name: p.name, score: p.totalPoints, id: p.id }))
+  document.addEventListener(AppEvent.UPDATE_STATE, ((e: CustomEvent<AppState>) => {
+    renderDynamicContainer(e.detail)
+  // eslint-disable-next-line no-undef
+  }) as EventListener)
+
+  await renderDynamicContainer(initialState)
 }
 
 export default main
