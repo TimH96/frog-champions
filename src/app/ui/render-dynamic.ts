@@ -27,10 +27,8 @@ const renderDynamicContainer = async (state: AppState): Promise<void> => {
 
   // render dynamic container based on state
   container!.appendChild(getControlButtons(state))
-  container!.appendChild(getLeaderboardTable(arr))
+  container!.appendChild(getLeaderboardTable(state, arr))
   container!.appendChild(getLoadMoreButton(state, state.players.size))
-
-  console.log(arr)
 }
 
 export default renderDynamicContainer
