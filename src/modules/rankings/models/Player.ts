@@ -65,9 +65,13 @@ export default class Player {
       return this._name
     }
 
-    const n = await (await fetchUser(this.id)).data.names.international
-    this._name = n
+    try {
+      const n = await (await fetchUser(this.id)).data.names.international
+      this._name = n
+    } catch {
+      this._name = `UNLOADED: ${this.id}`
+    }
 
-    return n
+    return this._name
   }
 }
