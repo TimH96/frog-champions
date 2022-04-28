@@ -1,4 +1,5 @@
 import AppState from '../models/AppState'
+import { getSliceParameters, getSorterFunction } from './array-helper'
 import getControlButtons from './components/control-buttons'
 import getLoader from './components/loader'
 
@@ -8,15 +9,18 @@ const renderDynamicContainer = async (state: AppState): Promise<void> => {
 
   reset()
 
-  // add loader
+  // add loader as arranging array might include loading player names
   container!.appendChild(getLoader())
 
-  // arrange data
-  // const arr = Array.from(state.players.values())
-  //  .sort((a, b) => b.totalPoints - a.totalPoints)
-  //  .slice(0, 50)
+  // arrange data based on state
+  const arr = Array.from(state.players.values())
+    .sort(getSorterFunction(state))
+    .slice(...getSliceParameters(state))
 
-  // remove loader
+  // load all names
+  await Promise.all(arr.map(async (p) => await p.getName()))
+
+  // remove loader again
   reset()
 
   // render dynamic container based on state
