@@ -19,6 +19,8 @@ const getButton = (s: AppState, type: TableSelection) => {
 
 const getControlButtons = (s: AppState) => {
   const l = document.createElement('li')
+  l.classList.add('control-buttons')
+
   const selections = [
     TableSelection.TOTAL,
     TableSelection.A_SIDES,
