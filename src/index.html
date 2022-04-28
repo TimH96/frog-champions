@@ -15,31 +15,27 @@
   <meta property="og:url" content="https://www.sitepoint.com/a-basic-html5-template/">
   <meta property="og:description" content="A simple HTML5 Template for new projects.">
 
-  <link rel="stylesheet" href="css/styles.css?v=1.0">
+  <link rel="stylesheet" href="styles.css?v=1.0">
 </head>
 
 <body>
   <div id="container">
-    <div id="about-container">
-      <h1>Celeste Elite Rankings</h1>
-      
-      <h2>About</h2>
-      <p>This website ranks Celeste speedrunners by an accumulated score from all their Individual Level times, largely inspired by <a href="https://www.the-elite.net/">the-elite.net</a>. For the data source, it uses <a href="https://www.speedrun.com/celeste/levels">speedrun.com</a> and its REST API.</p>
-      <p>It is pretty basic right now, by design. With enough interest, I can see myself investing more time to make it prettier and add features. And of course it is open source, you are free to submit your own changes via a PR.</p>
+    <h1>Celeste Elite Rankings</h1>
+    
+    <h2>About</h2>
+    <p>This website ranks Celeste speedrunners by an accumulated score from all their Individual Level times, largely inspired by <a href="https://www.the-elite.net/">the-elite.net</a>. For the data source, it uses <a href="https://www.speedrun.com/celeste/levels">speedrun.com</a> and its REST API.</p>
+    <p>It is pretty basic right now, by design. With enough interest, I can see myself investing more time to make it prettier and add features. And of course it is open source, you are free to submit your own changes via a PR.</p>
 
-      <h2>Ranking</h2>
-      <p>
-        The ranking algorithm works like this for each IL board:
-        <br>
-        1st gets 100 points, 2nd gets 97 points, 3rd gets 95 points - and from there it scales linearly, meaning 4th gets 94 points and so on. All individual scores are summed up for each player (either for all levels or for only a certain category), resulting in their final point count.
-      </p>
-      <p><b>Note: </b>Farewell is considered an A-Side in this context. Also, Collectible/Full Clear runs are unfortunately not considered at all because the <a href="https://www.speedrun.com/celeste/levels">speedrun.com</a> API is very limited around subcategories. If you find a succinct way to do incorporate them, let me know ASAP!</p>
+    <h2>Ranking</h2>
+    <p>
+      The ranking algorithm works like this for each IL board:
+      <br>
+      1st gets 100 points, 2nd gets 97 points, 3rd gets 95 points - and from there its linear, meaning 4th gets 94 points and so on. All individual scores are summed up for each player, resulting in their final point count.
+    </p>
+    <p><b>Note: </b>Farewell is considered an A-Side in this context. Also, Collectible/Full Clear runs are unfortunately not considered at all because the <a href="https://www.speedrun.com/celeste/levels">speedrun.com</a> API is very limited around subcategories. If you find a succinct way to incorporate them, let me know ASAP!</p>
 
-      <h2>Leaderboard</h2>
-      <li>
-        <b></b>
-      </li>
-    </div>
+    <h2>Leaderboard</h2>
+    <div id="dynamic-container"></div>
   </div>
 
   <script src="./index.ts"></script>
