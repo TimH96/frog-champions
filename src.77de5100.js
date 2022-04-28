@@ -1133,10 +1133,13 @@ var buildPlayerMap = function buildPlayerMap(grid) {
       grid.forEach(function (levelColumn, i) {
         return levelColumn.forEach(function (board, j) {
           return board.runs.forEach(function (r) {
-            var p = r.run.players[0];
-            p.id && (pMap.has(p.id) || pMap.set(p.id, new Player_1.default(p.id, gridDimensions)));
-            var pl = pMap.get(p.id);
-            pl.registerRun(r, i, j);
+            var p = r.run.players[0]; // skip players without id (deleted users)
+
+            if (p.id) {
+              pMap.has(p.id) || pMap.set(p.id, new Player_1.default(p.id, gridDimensions));
+              var pl = pMap.get(p.id);
+              pl.registerRun(r, i, j);
+            }
           });
         });
       });
@@ -1447,7 +1450,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62018" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65384" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
