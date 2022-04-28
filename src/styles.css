@@ -22,6 +22,12 @@ h2 {
   margin-bottom: 1em;
 }
 
+table {
+  width: 100%;
+  border: 1px solid;
+  text-align: center;
+}
+
 #container {
   min-width: 20em;
   max-width: 40em;
@@ -45,4 +51,8 @@ h2 {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.leaderboard-table {
+  margin-bottom: 2em;
 }

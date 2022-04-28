@@ -34,6 +34,7 @@ const getTableHeader = (
 const getLeaderboardTable = (s: AppState, arr: Player[]) => {
   const t = document.createElement('table')
   const getter = getPointsGetter(s.tableSelection)
+  t.classList.add('leaderboard-table')
 
   const head = getTableHeader('Place', 'Name', 'Points') as HTMLElement
   t.appendChild(head)
