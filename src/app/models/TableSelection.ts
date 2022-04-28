@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-vars */
-enum TableSelction {
-    TOTAL = 'TOTAL',
-    A_SIDES = 'A_SIDES',
-    B_SIDES = 'B_SIDES',
-    C_SIDES = 'C_SIDES',
+enum TableSelection {
+    TOTAL = 'Total',
+    A_SIDES = 'A-Sides',
+    B_SIDES = 'B-Sides',
+    C_SIDES = 'C-Sides',
 }
 
-export default TableSelction
+export default TableSelection
