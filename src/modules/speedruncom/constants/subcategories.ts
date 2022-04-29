@@ -1,4 +1,0 @@
-const COLLECTIBLES_VARIABLE_NAME = 'Full Clear / ARB / HC'
-const FC_RUN_VALUE = 'Full Clear'
-
-export { COLLECTIBLES_VARIABLE_NAME, FC_RUN_VALUE }
