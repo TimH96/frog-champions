@@ -127,6 +127,35 @@ var GAME_ID = 'o1y9j9v6';
 exports.GAME_ID = GAME_ID;
 var GAME_NAME = 'Celeste';
 exports.GAME_NAME = GAME_NAME;
+var COLLECTIBLES_VARIABLE_NAME = 'Full Clear / ARB / HC';
+exports.COLLECTIBLES_VARIABLE_NAME = COLLECTIBLES_VARIABLE_NAME;
+var FC_RUN_VALUE = 'Full Clear';
+exports.FC_RUN_VALUE = FC_RUN_VALUE;
+var Categories;
+
+(function (Categories) {
+  Categories["A_SIDES"] = "Clear";
+  Categories["COLLECTIBLES"] = "Collectibles";
+  Categories["B_SIDES"] = "B-Side";
+  Categories["C_SIDES"] = "C-Side";
+})(Categories || (Categories = {}));
+
+exports.Categories = Categories;
+var ChapterNames;
+
+(function (ChapterNames) {
+  ChapterNames["C1"] = "Forsaken City";
+  ChapterNames["C2"] = "Old Site";
+  ChapterNames["C3"] = "Celestial Resort";
+  ChapterNames["C4"] = "Golden Ridge";
+  ChapterNames["C5"] = "Mirror Temple";
+  ChapterNames["C6"] = "Reflection";
+  ChapterNames["C7"] = "The Summit";
+  ChapterNames["C8"] = "Core";
+  ChapterNames["C9"] = "Farewell";
+})(ChapterNames || (ChapterNames = {}));
+
+exports.ChapterNames = ChapterNames;
 },{}],"modules/speedruncom/wrapper.ts":[function(require,module,exports) {
 "use strict";
 
@@ -303,6 +332,26 @@ var fetchLevelBoard = function fetchLevelBoard(level, category) {
 };
 
 exports.fetchLevelBoard = fetchLevelBoard;
+
+var fetchLevelBoardWithVariable = function fetchLevelBoardWithVariable(level, category, varId, val) {
+  return __awaiter(_this, void 0, Promise, function () {
+    return __generator(this, function (_a) {
+      switch (_a.label) {
+        case 0:
+          return [4
+          /*yield*/
+          , fetch(getBasePath() + "/leaderboards/" + celeste_1.GAME_ID + "/level/" + level.id + "/" + category.id + "?var-" + varId + "=" + val)];
+
+        case 1:
+          return [2
+          /*return*/
+          , _a.sent().json()];
+      }
+    });
+  });
+};
+
+exports.fetchLevelBoardWithVariable = fetchLevelBoardWithVariable;
 
 var fetchLevels = function fetchLevels() {
   return __awaiter(_this, void 0, Promise, function () {
@@ -553,9 +602,11 @@ Object.defineProperty(exports, "__esModule", {
 
 var wrapper_1 = require("./wrapper");
 
+var celeste_1 = require("./constants/celeste");
+
 var getRawLeaderboardData = function getRawLeaderboardData() {
   return __awaiter(_this, void 0, Promise, function () {
-    var levels, categories, grid, variables;
+    var levels, categories, variables, grid;
     return __generator(this, function (_a) {
       switch (_a.label) {
         case 0:
@@ -573,22 +624,35 @@ var getRawLeaderboardData = function getRawLeaderboardData() {
           categories = _a.sent();
           return [4
           /*yield*/
-          , Promise.all(categories.data.map(function (cat) {
-            return Promise.all(levels.data.map(function (lvl) {
-              return wrapper_1.fetchLevelBoard(lvl, cat);
-            }));
-          }))];
-
-        case 3:
-          grid = _a.sent();
-          return [4
-          /*yield*/
           , Promise.all(levels.data.map(function (lvl) {
             return wrapper_1.fetchLevelVariables(lvl);
           }))];
 
-        case 4:
+        case 3:
           variables = _a.sent();
+          return [4
+          /*yield*/
+          , Promise.all(categories.data.map(function (cat) {
+            return Promise.all(levels.data.map(function (lvl, i) {
+              if (cat.name === celeste_1.Categories.COLLECTIBLES && lvl.name !== celeste_1.ChapterNames.C9) {
+                // find the 2 relevant IDs based on variable name and run value label
+                var variable = variables[i].data.find(function (x) {
+                  return x.name === celeste_1.COLLECTIBLES_VARIABLE_NAME;
+                });
+                var value = Object.entries(variable.values.values).find(function (_a) {
+                  var _key = _a[0],
+                      val = _a[1];
+                  return val.label === celeste_1.FC_RUN_VALUE;
+                });
+                return wrapper_1.fetchLevelBoardWithVariable(lvl, cat, variable.id, value[0]);
+              }
+
+              return wrapper_1.fetchLevelBoard(lvl, cat);
+            }));
+          }))];
+
+        case 4:
+          grid = _a.sent();
           return [2
           /*return*/
           , {
@@ -603,26 +667,13 @@ var getRawLeaderboardData = function getRawLeaderboardData() {
 };
 
 exports.getRawLeaderboardData = getRawLeaderboardData;
-},{"./wrapper":"modules/speedruncom/wrapper.ts"}],"modules/speedruncom/constants/subcategories.ts":[function(require,module,exports) {
+},{"./wrapper":"modules/speedruncom/wrapper.ts","./constants/celeste":"modules/speedruncom/constants/celeste.ts"}],"modules/speedruncom/grid-transformation.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-var COLLECTIBLES_VARIABLE_NAME = 'Full Clear / ARB / HC';
-exports.COLLECTIBLES_VARIABLE_NAME = COLLECTIBLES_VARIABLE_NAME;
-var FC_RUN_VALUE = 'Full Clear';
-exports.FC_RUN_VALUE = FC_RUN_VALUE;
-},{}],"modules/speedruncom/grid-transformation.ts":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var subcategories_1 = require("./constants/subcategories");
 /** returns a gridTransformationFunction, using the given callback function in grid.map */
-
 
 var getGridMapTransformation = function getGridMapTransformation(func) {
   return function (grid) {
@@ -633,48 +684,14 @@ var getGridMapTransformation = function getGridMapTransformation(func) {
 };
 
 exports.getGridMapTransformation = getGridMapTransformation;
-/** remove Collectibles category from the grid entirely */
 
-var removeCollectiblesCategory = function removeCollectiblesCategory(grid) {
+var removeColumn = function removeColumn(grid, col) {
   return grid.filter(function (_, i) {
-    return i !== 1;
+    return i !== col;
   });
 };
 
-exports.removeCollectiblesCategory = removeCollectiblesCategory;
-
-var getFilterFullClearRuns = function getFilterFullClearRuns(variables) {
-  var callback = function callback(levelColumn, i) {
-    if (i === 1
-    /* only filter runs in the collectibles column */
-    ) {
-      return levelColumn.map(function (level, i) {
-        // find the 2 relevant IDs based on variable name and run value label
-        var variable = variables[i].find(function (x) {
-          return x.name === subcategories_1.COLLECTIBLES_VARIABLE_NAME;
-        });
-        var value = Object.entries(variable.values.values).find(function (_a) {
-          var _key = _a[0],
-              val = _a[1];
-          return val.label === subcategories_1.FC_RUN_VALUE;
-        }); // throw out if run is of not of given subcategory
-
-        level.runs = level.runs.filter(function (run) {
-          return run.run.values[variable.id] === value[0];
-        });
-        return level;
-      });
-    }
-
-    return levelColumn;
-  };
-
-  return function (grid) {
-    return getGridMapTransformation(callback)(grid);
-  };
-};
-
-exports.getFilterFullClearRuns = getFilterFullClearRuns;
+exports.removeColumn = removeColumn;
 
 var removeFarewellObsoletes = function removeFarewellObsoletes(grid) {
   var callback = function callback(levelColumn, i) {
@@ -691,7 +708,7 @@ var removeFarewellObsoletes = function removeFarewellObsoletes(grid) {
 };
 
 exports.removeFarewellObsoletes = removeFarewellObsoletes;
-},{"./constants/subcategories":"modules/speedruncom/constants/subcategories.ts"}],"modules/rankings/scoring.ts":[function(require,module,exports) {
+},{}],"modules/rankings/scoring.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1197,6 +1214,7 @@ var TableSelection;
 (function (TableSelection) {
   TableSelection["TOTAL"] = "Total";
   TableSelection["A_SIDES"] = "A-Sides";
+  TableSelection["COLLECTIBLES"] = "Collectibles";
   TableSelection["B_SIDES"] = "B-Sides";
   TableSelection["C_SIDES"] = "C-Sides";
 })(TableSelection || (TableSelection = {}));
@@ -1229,14 +1247,19 @@ var getPointsGetter = function getPointsGetter(sel) {
         return p.getPointsOfColumn(0);
       };
 
-    case TableSelection_1.default.B_SIDES:
+    case TableSelection_1.default.COLLECTIBLES:
       return function (p) {
         return p.getPointsOfColumn(1);
       };
 
-    case TableSelection_1.default.C_SIDES:
+    case TableSelection_1.default.B_SIDES:
       return function (p) {
         return p.getPointsOfColumn(2);
+      };
+
+    case TableSelection_1.default.C_SIDES:
+      return function (p) {
+        return p.getPointsOfColumn(3);
       };
 
     default:
@@ -1310,7 +1333,7 @@ var getButton = function getButton(s, type) {
 var getControlButtons = function getControlButtons(s) {
   var l = document.createElement('li');
   l.classList.add('control-buttons');
-  var selections = [TableSelection_1.default.TOTAL, TableSelection_1.default.A_SIDES, TableSelection_1.default.B_SIDES, TableSelection_1.default.C_SIDES];
+  var selections = [TableSelection_1.default.TOTAL, TableSelection_1.default.A_SIDES, TableSelection_1.default.COLLECTIBLES, TableSelection_1.default.B_SIDES, TableSelection_1.default.C_SIDES];
 
   for (var _i = 0, selections_1 = selections; _i < selections_1.length; _i++) {
     var type = selections_1[_i];
@@ -1832,26 +1855,22 @@ var main = function main() {
           /*yield*/
           , function () {
             return __awaiter(_this, void 0, void 0, function () {
-              var raw, variables, grid, transformations;
+              var raw, grid, transformations;
               return __generator(this, function (_a) {
                 switch (_a.label) {
                   case 0:
                     return [4
                     /*yield*/
-                    , get_data_1.getRawLeaderboardData() // remove .data ApiResponse
-                    ];
+                    , get_data_1.getRawLeaderboardData()];
 
                   case 1:
                     raw = _a.sent();
-                    variables = raw.variables.map(function (variable) {
-                      return variable.data;
-                    });
                     grid = raw.grid.map(function (categoryRow) {
                       return categoryRow.map(function (levelBoard) {
                         return levelBoard.data;
                       });
                     });
-                    transformations = [grid_transformation_1.removeFarewellObsoletes, grid_transformation_1.getFilterFullClearRuns(variables), grid_transformation_1.removeCollectiblesCategory];
+                    transformations = [grid_transformation_1.removeFarewellObsoletes];
                     transformations.forEach(function (tFunc) {
                       grid = tFunc(grid);
                     });
@@ -1939,7 +1958,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58670" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60126" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
