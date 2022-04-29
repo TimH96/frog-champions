@@ -18,6 +18,15 @@ const fetchLevelBoard = async (level: SpeedrunLevel, category: SpeedrunCategory)
   return (await fetch(`${getBasePath()}/leaderboards/${GAME_ID}/level/${level.id}/${category.id}`)).json()
 }
 
+const fetchLevelBoardWithVariable = async (
+  level: SpeedrunLevel,
+  category: SpeedrunCategory,
+  varId: SpeedrunId,
+  val: SpeedrunId
+): Promise<SpeedrunApiResponse<SpeedrunLeaderboard>> => {
+  return (await fetch(`${getBasePath()}/leaderboards/${GAME_ID}/level/${level.id}/${category.id}?var-${varId}=${val}`)).json()
+}
+
 const fetchLevels = async (): Promise<SpeedrunApiResponse<SpeedrunLevel[]>> => {
   return await (await fetch(`${getBasePath()}/games/${GAME_ID}/levels`)).json()
 }
@@ -34,4 +43,11 @@ const fetchUser = async (user: SpeedrunId): Promise<SpeedrunApiResponse<Speedrun
   return await (await fetch(`${getBasePath()}/users/${user}`)).json()
 }
 
-export { fetchLevelBoard, fetchLevels, fetchLevelCategories, fetchLevelVariables, fetchUser }
+export {
+  fetchLevelBoard,
+  fetchLevelBoardWithVariable,
+  fetchLevels,
+  fetchLevelCategories,
+  fetchLevelVariables,
+  fetchUser
+}
