@@ -24,6 +24,7 @@ const getControlButtons = (s: AppState) => {
   const selections = [
     TableSelection.TOTAL,
     TableSelection.A_SIDES,
+    TableSelection.COLLECTIBLES,
     TableSelection.B_SIDES,
     TableSelection.C_SIDES
   ]
