@@ -1,6 +1,6 @@
 import LevelGrid from '../modules/speedruncom/models/LevelGrid'
 import { getRawLeaderboardData } from '../modules/speedruncom/get-data'
-import { getFilterFullClearRuns, gridTransformationFunction, removeCollectiblesCategory, removeFarewellObsoletes } from '../modules/speedruncom/grid-transformation'
+import { gridTransformationFunction, removeFarewellObsoletes } from '../modules/speedruncom/grid-transformation'
 import buildPlayerMap from '../modules/rankings/build-map'
 import AppState from './models/AppState'
 import AppEvent from './models/AppEvent'
@@ -11,16 +11,11 @@ const main = async () => {
   const pMap = await (async () => {
     // fetch data
     const raw = await getRawLeaderboardData()
-
-    // remove .data ApiResponse
-    const variables = raw.variables.map((variable) => variable.data)
     let grid: LevelGrid = raw.grid.map((categoryRow) => categoryRow.map((levelBoard) => levelBoard.data))
 
     // transform grid
     const transformations: gridTransformationFunction[] = [
-      removeFarewellObsoletes,
-      getFilterFullClearRuns(variables), // this is currently unused because collectibles are removed entirely
-      removeCollectiblesCategory
+      removeFarewellObsoletes
     ]
     transformations.forEach((tFunc) => { grid = tFunc(grid) })
 
