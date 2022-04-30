@@ -1,5 +1,6 @@
 /* variables */
 :root {
+  --lowlight: gray;
   --highlight: lightgrey;
   --highlight-bright: rgb(240, 240, 240);
 }
@@ -77,7 +78,7 @@ td.player-table {
   width: 20%;
 }
 
-td.player-table-chapter {  
+td.player-table-chapter {
   background-color: var(--highlight-bright);
 }
 
@@ -105,4 +106,10 @@ td.player-table-chapter {
 
 .hover-highlight:hover {
   background-color: var(--highlight-bright);
+}
+
+.mini-text {
+  color: var(--lowlight);
+  font-size: 10px;
+  font-weight: bold;
 }
