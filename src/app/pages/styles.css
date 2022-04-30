@@ -17,6 +17,18 @@ h1 {
   text-align: center;
 }
 
+th {
+  background-color: lightgrey;
+  border: 1px solid;
+}
+
+table {
+  width: 100%;
+  border: 1px solid;
+  text-align: center;
+  margin-bottom: 2em;
+}
+
 h1,
 h2 {
   margin-bottom: 1em;
@@ -47,22 +59,11 @@ h2 {
   align-items: center;
 }
 
-.leaderboard-table {
-  margin-bottom: 2em;
-  width: 100%;
-  border: 1px solid;
-  text-align: center;
-}
-
-.player-table {
-  margin-bottom: 2em;
-}
-
-.player-table {
-  margin-bottom: 2em;
-}
-
 .total-points {
   font-weight: bold;
   font-size: 18px;
+}
+
+.bold {
+  font-weight: bold;
 }

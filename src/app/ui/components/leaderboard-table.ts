@@ -10,7 +10,7 @@ const getTableElement = (
 ) => {
   const ele = htmlToElement(`
         <tr>
-            <td>${place}</td>
+            <td class="bold">${place}</td>
             <td>${player.name}</td>
             <td>${points}</td>
         </tr>

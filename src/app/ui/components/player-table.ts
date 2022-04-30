@@ -9,7 +9,7 @@ const getRunElement = (
   r: SpeedrunRankedRun
 ) => {
   if (!r) {
-    return htmlToElement('<td>undefined</td>')
+    return htmlToElement('<td>-------</td>')
   }
   const ele = htmlToElement(`<td>${r.run.times.ingame_t} / ${Player.scoringFn(r)} / ${r.place}</td>`)
 
@@ -75,7 +75,7 @@ const getPlayerTable = (s: PlayerState) => {
       ].map(r => getRunElement(r))
     }
 
-    const x = [htmlToElement(`<td>${chapter}</td>`)].concat(runElements)
+    const x = [htmlToElement(`<td class="bold">${chapter}</td>`)].concat(runElements)
     return getTableElement(x.map(e => e as HTMLElement))
   })
   tableRows.forEach(e => t.appendChild(e))
