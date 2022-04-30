@@ -25,6 +25,7 @@
         "husky": "^7.0.0"
     },
     "dependencies": {
-        "husky": "^7.0.4"
+        "husky": "^7.0.4",
+        "tinyduration": "^3.2.2"
     }
 }
