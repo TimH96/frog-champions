@@ -86,6 +86,8 @@ td.player-table-chapter {
   display: grid;
   grid-template-columns: 1fr;
   font-size: 12px;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
 }
 
 .total-points {

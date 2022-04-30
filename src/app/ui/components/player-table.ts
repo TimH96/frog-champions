@@ -16,7 +16,6 @@ const getRunElement = (
         <div class="player-table-run">
           <span>---------</span>
           <span>---------</span>
-          <span>---------</span>
         </div>
       </td>
     `)
@@ -30,8 +29,7 @@ const getRunElement = (
     <td class="hover-highlight">
       <div class="player-table-run">
         <span>${toHHMMSS(withoutMs)}.${getMs(onlyMs, true)}</span>
-        <span>${r.place}${getOrdinal(r.place, true)}</span>
-        <span>${Player.scoringFn(r)}${getPts(true)}</span>
+        <div><span>${r.place}${getOrdinal(r.place, true)}</span> / <span>${Player.scoringFn(r)}${getPts(true)}</span></div>
       </div>
     </td>
   `)
