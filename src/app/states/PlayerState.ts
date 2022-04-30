@@ -1,5 +1,5 @@
-import SpeedrunId from '../../modules/speedruncom/models/SpeedrunId'
+import Player from '../../modules/rankings/models/Player'
 
-export default interface AppState {
-    player: SpeedrunId
+export default interface PlayerState {
+    player: Player | null | undefined
 }
