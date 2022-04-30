@@ -22,12 +22,6 @@ h2 {
   margin-bottom: 1em;
 }
 
-table {
-  width: 100%;
-  border: 1px solid;
-  text-align: center;
-}
-
 #container {
   min-width: 20em;
   max-width: 40em;
@@ -55,4 +49,20 @@ table {
 
 .leaderboard-table {
   margin-bottom: 2em;
+  width: 100%;
+  border: 1px solid;
+  text-align: center;
+}
+
+.player-table {
+  margin-bottom: 2em;
+}
+
+.player-table {
+  margin-bottom: 2em;
+}
+
+.total-points {
+  font-weight: bold;
+  font-size: 18px;
 }
