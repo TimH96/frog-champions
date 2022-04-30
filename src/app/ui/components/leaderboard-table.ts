@@ -9,7 +9,7 @@ const getTableElement = (
   points: string | number
 ) => {
   const ele = htmlToElement(`
-        <tr>
+        <tr class="hover-highlight">
             <td class="bold">${place}</td>
             <td>${player.name}</td>
             <td>${points}</td>

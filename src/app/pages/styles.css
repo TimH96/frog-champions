@@ -67,3 +67,7 @@ h2 {
 .bold {
   font-weight: bold;
 }
+
+.hover-highlight:hover {
+  background-color: lightgray;
+}

@@ -11,7 +11,7 @@ const getRunElement = (
   if (!r) {
     return htmlToElement('<td>-------</td>')
   }
-  const ele = htmlToElement(`<td>${r.run.times.ingame_t} / ${Player.scoringFn(r)} / ${r.place}</td>`)
+  const ele = htmlToElement(`<td class="hover-highlight">${r.run.times.ingame_t} / ${Player.scoringFn(r)} / ${r.place}</td>`)
 
   ele.addEventListener('click', () => {
     console.log(r)
