@@ -60,6 +60,12 @@ h2 {
   margin-bottom: 3em;
 }
 
+#link-back-to-rankings {
+  justify-content: center;
+  text-align: center;
+  margin-bottom: 4em;
+}
+
 /* specific element classes */
 .control-buttons {
   display: grid;
