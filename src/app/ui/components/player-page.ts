@@ -8,8 +8,6 @@ const renderPlayerPage = async (state: PlayerState, id: string): Promise<void> =
 
   reset()
 
-  console.log(state.player)
-
   if (!state.player) {
     container!.appendChild(htmlToElement(`
       <h1>Oops, something went wrong!</h1>

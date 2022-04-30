@@ -5,16 +5,20 @@ import getPointsGetter from '../points-getter'
 
 const getTableElement = (
   place: string | number,
-  name: string,
+  player: Player,
   points: string | number
 ) => {
-  return htmlToElement(`
+  const ele = htmlToElement(`
         <tr>
             <td>${place}</td>
-            <td>${name}</td>
+            <td>${player.name}</td>
             <td>${points}</td>
         </tr>
     `)
+  ele.addEventListener('click', () => {
+    window.open(`./player.html?player=${player.id}`, '_blank')!.focus()
+  })
+  return ele
 }
 
 const getTableHeader = (
@@ -41,7 +45,7 @@ const getLeaderboardTable = (s: AppState, arr: Player[]) => {
 
   arr.forEach((p, i) => t.appendChild(getTableElement(
     i + 1,
-    p.name,
+    p,
     getter(p)
   )))
 
