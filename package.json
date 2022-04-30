@@ -5,8 +5,8 @@
     "scripts": {
         "lint": "eslint . --ext .ts",
         "lint:fix": "eslint . --fix --ext .ts",
-        "start": "parcel serve src/index.html",
-        "build": "cross-env NODE_ENV=production parcel build src/index.html --public-url .",
+        "start": "parcel serve src/app/pages/index.html",
+        "build": "cross-env NODE_ENV=production parcel build src/app/pages/index.html --public-url .",
         "deploy": "gh-pages -d dist",
         "prepare": "husky install"
     },
