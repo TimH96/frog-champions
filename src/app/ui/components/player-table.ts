@@ -9,9 +9,25 @@ const getRunElement = (
   r: SpeedrunRankedRun
 ) => {
   if (!r) {
-    return htmlToElement('<td>-------</td>')
+    return htmlToElement(`
+    <td class="hover-highlight">
+      <div class="player-table-run">
+        <span>---------</span>
+        <span>---------</span>
+        <span>---------</span>
+      </div>
+    </td>
+  `)
   }
-  const ele = htmlToElement(`<td class="hover-highlight">${r.run.times.ingame_t} / ${Player.scoringFn(r)} / ${r.place}</td>`)
+  const ele = htmlToElement(`
+    <td class="hover-highlight">
+      <div class="player-table-run">
+        <span>${r.run.times.ingame_t}</span>
+        <span>${Player.scoringFn(r)}</span>
+        <span>${r.place}</span>
+      </div>
+    </td>
+  `)
 
   ele.addEventListener('click', () => {
     console.log(r)
@@ -75,7 +91,7 @@ const getPlayerTable = (s: PlayerState) => {
       ].map(r => getRunElement(r))
     }
 
-    const x = [htmlToElement(`<td class="bold">${chapter}</td>`)].concat(runElements)
+    const x = [htmlToElement(`<td class="bold player-table-chapter">${chapter}</td>`)].concat(runElements)
     return getTableElement(x.map(e => e as HTMLElement))
   })
   tableRows.forEach(e => t.appendChild(e))
