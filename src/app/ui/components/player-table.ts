@@ -12,6 +12,12 @@ const getRunElement = (
     return htmlToElement('<td>undefined</td>')
   }
   const ele = htmlToElement(`<td>${r.run.times.ingame_t} / ${Player.scoringFn(r)} / ${r.place}</td>`)
+
+  ele.addEventListener('click', () => {
+    console.log(r)
+    window.open(r.run.weblink)
+  })
+
   return ele
 }
 
