@@ -2,7 +2,7 @@ import Player from '../../../modules/rankings/models/Player'
 import AppState from '../../states/AppState'
 import htmlToElement from '../util/html-helper'
 import getPointsGetter from '../util/points-getter'
-import { getPts } from '../util/subtexts'
+import { getPts } from './subtexts'
 
 const getTableElement = (
   place: string | number,

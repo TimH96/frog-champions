@@ -4,7 +4,7 @@ import SpeedrunRankedRun from '../../../modules/speedruncom/models/SpeedrunRanke
 import TableSelection from '../../models/TableSelection'
 import PlayerState from '../../states/PlayerState'
 import htmlToElement from '../util/html-helper'
-import { getOrdinal, getPts } from '../util/subtexts'
+import { getOrdinal, getPts } from './subtexts'
 
 const getRunElement = (
   r: SpeedrunRankedRun
