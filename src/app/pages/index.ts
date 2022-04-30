@@ -1,4 +1,4 @@
-import AppState from '../models/AppState'
+import AppState from '../states/AppState'
 import AppEvent from '../models/AppEvent'
 import TableSelection from '../models/TableSelection'
 import getPlayerMap from '../../modules/rankings/get-map'

@@ -1,5 +1,5 @@
 import Player from '../../../modules/rankings/models/Player'
-import AppState from '../../models/AppState'
+import AppState from '../../states/AppState'
 import htmlToElement from '../html-helper'
 import getPointsGetter from '../points-getter'
 

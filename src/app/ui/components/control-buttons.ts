@@ -1,5 +1,5 @@
 import AppEvent from '../../models/AppEvent'
-import AppState from '../../models/AppState'
+import AppState from '../../states/AppState'
 import TableSelection from '../../models/TableSelection'
 
 const getCallback = (s: AppState, type: TableSelection) => {

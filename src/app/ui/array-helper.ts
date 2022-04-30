@@ -3,7 +3,7 @@
  */
 
 import Player from '../../modules/rankings/models/Player'
-import AppState from '../models/AppState'
+import AppState from '../states/AppState'
 import getPointsGetter from './points-getter'
 
 const getSorterFunction = (s: AppState) => {

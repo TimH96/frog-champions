@@ -1,5 +1,5 @@
 import Player from '../../modules/rankings/models/Player'
-import TableSelection from './TableSelection'
+import TableSelection from '../models/TableSelection'
 
 export default interface AppState {
     players: Map<string, Player>,

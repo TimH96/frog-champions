@@ -1,4 +1,4 @@
-import AppState from '../../models/AppState'
+import AppState from '../../states/AppState'
 import { getSorterFunction } from '../array-helper'
 import getControlButtons from './control-buttons'
 import getLeaderboardTable from './leaderboard-table'
