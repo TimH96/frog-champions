@@ -1,20 +1,25 @@
 import Player from '../../../modules/rankings/models/Player'
-import AppState from '../../models/AppState'
-import htmlToElement from '../html-helper'
-import getPointsGetter from '../points-getter'
+import AppState from '../../states/AppState'
+import htmlToElement from '../util/html-helper'
+import getPointsGetter from '../util/points-getter'
+import { getPts } from './subtexts'
 
 const getTableElement = (
   place: string | number,
-  name: string,
+  player: Player,
   points: string | number
 ) => {
-  return htmlToElement(`
-        <tr>
-            <td>${place}</td>
-            <td>${name}</td>
-            <td>${points}</td>
+  const ele = htmlToElement(`
+        <tr class="hover-highlight">
+            <td class="bold">${place}</td>
+            <td>${player.name}</td>
+            <td>${points} ${getPts(true)}</td>
         </tr>
     `)
+  ele.addEventListener('click', () => {
+    window.open(`./player.html?player=${player.id}`, '_blank')!.focus()
+  })
+  return ele
 }
 
 const getTableHeader = (
@@ -41,7 +46,7 @@ const getLeaderboardTable = (s: AppState, arr: Player[]) => {
 
   arr.forEach((p, i) => t.appendChild(getTableElement(
     i + 1,
-    p.name,
+    p,
     getter(p)
   )))
 

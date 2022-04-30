@@ -2,8 +2,8 @@
  * collection of functions to help transform the player array based on user input
  */
 
-import Player from '../../modules/rankings/models/Player'
-import AppState from '../models/AppState'
+import Player from '../../../modules/rankings/models/Player'
+import AppState from '../../states/AppState'
 import getPointsGetter from './points-getter'
 
 const getSorterFunction = (s: AppState) => {

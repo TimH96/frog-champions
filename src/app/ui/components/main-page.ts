@@ -1,12 +1,12 @@
-import AppState from '../models/AppState'
-import { getSorterFunction } from './array-helper'
-import getControlButtons from './components/control-buttons'
-import getLeaderboardTable from './components/leaderboard-table'
-import getLoadMoreButton from './components/load-more-button'
-import getLoader from './components/loader'
+import AppState from '../../states/AppState'
+import { getSorterFunction } from '../util/array-helper'
+import getControlButtons from './control-buttons'
+import getLeaderboardTable from './leaderboard-table'
+import getLoadMoreButton from './load-more-button'
+import getLoader from './loader'
 
-const renderDynamicContainer = async (state: AppState): Promise<void> => {
-  const container = document.getElementById('dynamic-container')
+const renderMainPage = async (state: AppState, id: string): Promise<void> => {
+  const container = document.getElementById(id)
   const reset = () => { container!.innerHTML = '' }
 
   reset()
@@ -31,4 +31,4 @@ const renderDynamicContainer = async (state: AppState): Promise<void> => {
   container!.appendChild(getLoadMoreButton(state, state.players.size))
 }
 
-export default renderDynamicContainer
+export default renderMainPage

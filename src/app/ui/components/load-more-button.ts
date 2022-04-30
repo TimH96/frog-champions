@@ -1,5 +1,5 @@
 import AppEvent from '../../models/AppEvent'
-import AppState from '../../models/AppState'
+import AppState from '../../states/AppState'
 
 const getLoadMoreButton = (s: AppState, max: number) => {
   if (s.tableState >= max) {
