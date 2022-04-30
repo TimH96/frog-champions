@@ -1,7 +1,8 @@
 import Player from '../../../modules/rankings/models/Player'
 import AppState from '../../states/AppState'
-import htmlToElement from '../html-helper'
-import getPointsGetter from '../points-getter'
+import htmlToElement from '../util/html-helper'
+import getPointsGetter from '../util/points-getter'
+import { getPts } from '../util/subtexts'
 
 const getTableElement = (
   place: string | number,
@@ -12,7 +13,7 @@ const getTableElement = (
         <tr class="hover-highlight">
             <td class="bold">${place}</td>
             <td>${player.name}</td>
-            <td>${points}</td>
+            <td>${points} ${getPts(true)}</td>
         </tr>
     `)
   ele.addEventListener('click', () => {

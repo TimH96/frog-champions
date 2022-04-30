@@ -1,4 +1,4 @@
-import htmlToElement from '../html-helper'
+import htmlToElement from '../util/html-helper'
 
 const getLoader = () => {
   return htmlToElement('<div class="loader center">Loading...</div>')

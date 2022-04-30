@@ -1,5 +1,5 @@
-import Player from '../../modules/rankings/models/Player'
-import TableSelection from '../models/TableSelection'
+import Player from '../../../modules/rankings/models/Player'
+import TableSelection from '../../models/TableSelection'
 
 const getPointsGetter = (sel: TableSelection) => {
   switch (sel) {

@@ -3,7 +3,8 @@ import { ChapterNames } from '../../../modules/speedruncom/constants/celeste'
 import SpeedrunRankedRun from '../../../modules/speedruncom/models/SpeedrunRankedRun'
 import TableSelection from '../../models/TableSelection'
 import PlayerState from '../../states/PlayerState'
-import htmlToElement from '../html-helper'
+import htmlToElement from '../util/html-helper'
+import { getOrdinal, getPts } from '../util/subtexts'
 
 const getRunElement = (
   r: SpeedrunRankedRun
@@ -19,18 +20,20 @@ const getRunElement = (
     </td>
   `)
   }
+
+  console.log(r.run.times.primary)
+  // getMs(r.run.times.primary)
   const ele = htmlToElement(`
     <td class="hover-highlight">
       <div class="player-table-run">
-        <span>${r.run.times.ingame_t}</span>
-        <span>${Player.scoringFn(r)}</span>
-        <span>${r.place}</span>
+        <span>${r.run.times.primary}</span>
+        <span>${r.place}${getOrdinal(r.place, true)}</span>
+        <span>${Player.scoringFn(r)}${getPts(true)}</span>
       </div>
     </td>
   `)
 
   ele.addEventListener('click', () => {
-    console.log(r)
     window.open(r.run.weblink)
   })
 

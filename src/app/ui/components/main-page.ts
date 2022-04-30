@@ -1,5 +1,5 @@
 import AppState from '../../states/AppState'
-import { getSorterFunction } from '../array-helper'
+import { getSorterFunction } from '../util/array-helper'
 import getControlButtons from './control-buttons'
 import getLeaderboardTable from './leaderboard-table'
 import getLoadMoreButton from './load-more-button'

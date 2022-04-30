@@ -1,5 +1,5 @@
 import PlayerState from '../../states/PlayerState'
-import htmlToElement from '../html-helper'
+import htmlToElement from '../util/html-helper'
 import getPlayerTable from './player-table'
 import getTotalPointsCount from './total-points-count'
 
