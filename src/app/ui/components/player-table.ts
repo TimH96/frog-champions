@@ -4,29 +4,32 @@ import SpeedrunRankedRun from '../../../modules/speedruncom/models/SpeedrunRanke
 import TableSelection from '../../models/TableSelection'
 import PlayerState from '../../states/PlayerState'
 import htmlToElement from '../util/html-helper'
-import { getOrdinal, getPts } from './subtexts'
+import { toHHMMSS } from '../util/time-helper'
+import { getMs, getOrdinal, getPts } from './subtexts'
 
 const getRunElement = (
   r: SpeedrunRankedRun
 ) => {
   if (!r) {
     return htmlToElement(`
-    <td class="hover-highlight">
-      <div class="player-table-run">
-        <span>---------</span>
-        <span>---------</span>
-        <span>---------</span>
-      </div>
-    </td>
-  `)
+      <td class="hover-highlight">
+        <div class="player-table-run">
+          <span>---------</span>
+          <span>---------</span>
+          <span>---------</span>
+        </div>
+      </td>
+    `)
   }
 
-  console.log(r.run.times.primary)
-  // getMs(r.run.times.primary)
+  const timeSplit = String(r.run.times.primary_t).split('.')
+  const withoutMs = timeSplit[0]
+  const onlyMs = timeSplit.length === 2 ? timeSplit[1].padEnd(3, '0') : '000'
+
   const ele = htmlToElement(`
     <td class="hover-highlight">
       <div class="player-table-run">
-        <span>${r.run.times.primary}</span>
+        <span>${toHHMMSS(withoutMs)}.${getMs(onlyMs, true)}</span>
         <span>${r.place}${getOrdinal(r.place, true)}</span>
         <span>${Player.scoringFn(r)}${getPts(true)}</span>
       </div>

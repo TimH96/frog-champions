@@ -16,12 +16,8 @@ const getPts = (asString: boolean = false) => {
   return asString ? getMiniTextString('pts') : getMiniText('pts')
 }
 
-const getMs = (timeISO8601: string, asString: boolean = false) => {
-  // let x = parse(timeISO8601).seconds?.toString() || '0.000'
-  // let y = x.split('.')[1]
-//
-  // console.log(parse(timeISO8601))
-  // timeISO8601.split(".")[1]
+const getMs = (ms: string, asString: boolean = false) => {
+  return asString ? getMiniTextString(ms) : getMiniText(ms)
 }
 
 const getOrdinal = (n: number, asString: boolean = false) => {
