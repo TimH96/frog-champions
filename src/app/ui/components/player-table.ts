@@ -1,6 +1,5 @@
-import Player from '../../../modules/rankings/models/Player'
+import RankedRunWithScore from '../../../modules/rankings/models/RankedRunWithScore'
 import { ChapterNames } from '../../../modules/speedruncom/constants/celeste'
-import SpeedrunRankedRun from '../../../modules/speedruncom/models/SpeedrunRankedRun'
 import TableSelection from '../../models/TableSelection'
 import PlayerState from '../../states/PlayerState'
 import htmlToElement from '../util/html-helper'
@@ -8,7 +7,7 @@ import { toHHMMSS } from '../util/time-helper'
 import { getMs, getOrdinal, getPts } from './subtexts'
 
 const getRunElement = (
-  r: SpeedrunRankedRun
+  r: RankedRunWithScore
 ) => {
   const getTd = (row1: string, row2: string) => {
     return htmlToElement(`
@@ -34,7 +33,7 @@ const getRunElement = (
 
   const ele = getTd(
     `<span>${toHHMMSS(withoutMs)}.${getMs(onlyMs, true)}</span>`,
-    `<div><span>${r.place}${getOrdinal(r.place, true)}</span> / <span>${Player.scoringFn(r)} ${getPts(true)}</span></div>`
+    `<div><span>${r.place}${getOrdinal(r.place, true)}</span> / <span>${r.score} ${getPts(true)}</span></div>`
   )
 
   ele.addEventListener('click', () => {
@@ -56,7 +55,7 @@ const getTableHeader = (str: string[]) => {
 }
 
 const getPlayerTable = (s: PlayerState) => {
-  const p = s.player
+  const p = s.player!
 
   const CHAPTERS = [
     ChapterNames.C1,

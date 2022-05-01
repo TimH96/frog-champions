@@ -1,5 +1,5 @@
-import SpeedrunRankedRun from '../../speedruncom/models/SpeedrunRankedRun'
+import RankedRunWithScore from './RankedRunWithScore'
 
-type RankingGrid = SpeedrunRankedRun[][];
+type RankingGrid = RankedRunWithScore[][];
 
 export default RankingGrid
