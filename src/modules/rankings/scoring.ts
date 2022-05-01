@@ -8,4 +8,12 @@ const eliteScoring = (run: SpeedrunRankedRun): number => {
   return Math.max(0, 98 - run.place)
 }
 
-export { scoringFunction, eliteScoring }
+const getPercentScoreFn = (wrTime: number) => {
+  return (r: SpeedrunRankedRun) => {
+    const t = r.run.times.primary_t
+
+    return Math.round((wrTime / t) * 1000)
+  }
+}
+
+export { scoringFunction, eliteScoring, getPercentScoreFn }

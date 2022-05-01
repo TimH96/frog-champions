@@ -2,7 +2,7 @@ import SpeedrunId from '../../speedruncom/models/SpeedrunId'
 import SpeedrunRankedRun from '../../speedruncom/models/SpeedrunRankedRun'
 import RankingGrid from './RankingGrid'
 import { fetchUser } from '../../speedruncom/wrapper'
-import { eliteScoring, scoringFunction } from '../scoring'
+import RankedRunWithScore from './RankedRunWithScore'
 
 export default class Player {
   id: SpeedrunId
@@ -11,17 +11,20 @@ export default class Player {
   private _pointsPerColumn: number[]
   private _name: string | null | undefined = undefined
 
-  static scoringFn: scoringFunction = eliteScoring
-
   constructor (id: SpeedrunId, gridDimensions: number[]) {
     this.id = id
-    this.timesPage = gridDimensions.map((colSize) => new Array<SpeedrunRankedRun>(colSize))
+    this.timesPage = gridDimensions.map((colSize) => new Array<RankedRunWithScore>(colSize))
     this._pointsPerColumn = gridDimensions.map((_) => 0)
   }
 
   /** register run r in the grid at position i, j */
-  registerRun (r: SpeedrunRankedRun, i: number, j: number) {
-    this.timesPage[i][j] = r
+  registerRun (r: SpeedrunRankedRun, s: number, i: number, j: number) {
+    const x = {
+      place: r.place,
+      run: r.run,
+      score: s
+    }
+    this.timesPage[i][j] = x
   }
 
   public getPointsOfColumn (col: number): number {
@@ -29,7 +32,7 @@ export default class Player {
       return this._pointsPerColumn[col]
     }
 
-    const val = this.timesPage[col].reduce((sum, r) => sum + Player.scoringFn(r), 0)
+    const val = this.timesPage[col].reduce((sum, r) => sum + r.score, 0)
     this._pointsPerColumn[col] = val
 
     return val
