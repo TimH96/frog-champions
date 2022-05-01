@@ -3,11 +3,15 @@ import PlayerState from '../states/PlayerState'
 import renderPlayerPage from '../ui/components/player-page'
 import { fetchUser } from '../../modules/speedruncom/wrapper'
 import SpeedrunId from '../../modules/speedruncom/models/SpeedrunId'
+import getLoader from '../ui/components/loader'
 
 const main = async () => {
-  const CONTAINER = 'player-container'
+  const CONTAINER = document.getElementById('player-container')
+
+  CONTAINER!.appendChild(getLoader())
+
   const render = (s: PlayerState) => {
-    return renderPlayerPage(s, CONTAINER)
+    return renderPlayerPage(s, CONTAINER!)
   }
   const abort = () => {
     return render({ player: null })

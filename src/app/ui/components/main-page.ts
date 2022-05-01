@@ -5,8 +5,7 @@ import getLeaderboardTable from './leaderboard-table'
 import getLoadMoreButton from './load-more-button'
 import getLoader from './loader'
 
-const renderMainPage = async (state: AppState, id: string): Promise<void> => {
-  const container = document.getElementById(id)
+const renderMainPage = async (state: AppState, container: HTMLElement): Promise<void> => {
   const reset = () => { container!.innerHTML = '' }
 
   reset()

@@ -3,9 +3,12 @@ import AppEvent from '../models/AppEvent'
 import TableSelection from '../models/TableSelection'
 import getPlayerMap from '../../modules/rankings/get-map'
 import renderMainPage from '../ui/components/main-page'
+import getLoader from '../ui/components/loader'
 
 const main = async () => {
-  const CONTAINER = 'dynamic-container'
+  const CONTAINER = document.getElementById('dynamic-container')
+
+  CONTAINER!.appendChild(getLoader())
 
   const pMap = await getPlayerMap()
 
@@ -16,11 +19,11 @@ const main = async () => {
   }
 
   document.addEventListener(AppEvent.UPDATE_STATE, ((e: CustomEvent<AppState>) => {
-    renderMainPage(e.detail, CONTAINER)
+    renderMainPage(e.detail, CONTAINER!)
   // eslint-disable-next-line no-undef
   }) as EventListener)
 
-  await renderMainPage(initialState, CONTAINER)
+  await renderMainPage(initialState, CONTAINER!)
 }
 
 main()

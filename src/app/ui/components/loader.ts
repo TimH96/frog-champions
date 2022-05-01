@@ -1,7 +1,8 @@
-import htmlToElement from '../util/html-helper'
-
 const getLoader = () => {
-  return htmlToElement('<div class="loader center">Loading...</div>')
+  const x = document.createElement('div')
+  x.classList.add(...['loader', 'center'])
+  x.innerHTML = 'Loading ...'
+  return x
 }
 
 export default getLoader
