@@ -12,7 +12,7 @@ const getPercentScoreFn = (wrTime: number) => {
   return (r: SpeedrunRankedRun) => {
     const t = r.run.times.primary_t
 
-    return Math.round((wrTime / t) * 1000)
+    return Math.round((1 - Math.log((Math.E - 1) * (t / wrTime - 1) + 1)) * 1000)
   }
 }
 
