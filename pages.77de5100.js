@@ -1041,7 +1041,7 @@ exports.eliteScoring = eliteScoring;
 var getPercentScoreFn = function getPercentScoreFn(wrTime) {
   return function (r) {
     var t = r.run.times.primary_t;
-    return Math.round((1 - Math.log((Math.E - 1) * (t / wrTime - 1) + 1)) * 1000);
+    return Math.max(0, Math.round((1 - Math.log((Math.E - 1) * (t / wrTime - 1) + 1)) * 1000));
   };
 };
 
@@ -2180,7 +2180,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52713" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51345" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
