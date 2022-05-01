@@ -4,7 +4,7 @@ const getTotalPointsCount = (s: PlayerState) => {
   const x = document.createElement('span')
   x.classList.add('center')
   x.classList.add('total-points')
-  x.innerHTML = `Total: ${s.player!.totalPoints}`
+  x.innerHTML = `Total: ${s.player!.totalPoints} points`
   return x
 }
 
