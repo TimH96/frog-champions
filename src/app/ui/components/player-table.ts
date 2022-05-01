@@ -10,29 +10,32 @@ import { getMs, getOrdinal, getPts } from './subtexts'
 const getRunElement = (
   r: SpeedrunRankedRun
 ) => {
-  if (!r) {
+  const getTd = (row1: string, row2: string) => {
     return htmlToElement(`
       <td class="hover-highlight">
         <div class="player-table-run">
-          <span>---------</span>
-          <span>---------</span>
+          ${row1}
+          ${row2}
         </div>
       </td>
     `)
+  }
+
+  if (!r) {
+    return getTd(
+      '<span>---------</span>',
+      '<span>---------</span>'
+    )
   }
 
   const timeSplit = String(r.run.times.primary_t).split('.')
   const withoutMs = timeSplit[0]
   const onlyMs = timeSplit.length === 2 ? timeSplit[1].padEnd(3, '0') : '000'
 
-  const ele = htmlToElement(`
-    <td class="hover-highlight">
-      <div class="player-table-run">
-        <span>${toHHMMSS(withoutMs)}.${getMs(onlyMs, true)}</span>
-        <div><span>${r.place}${getOrdinal(r.place, true)}</span> / <span>${Player.scoringFn(r)} ${getPts(true)}</span></div>
-      </div>
-    </td>
-  `)
+  const ele = getTd(
+    `<span>${toHHMMSS(withoutMs)}.${getMs(onlyMs, true)}</span>`,
+    `<div><span>${r.place}${getOrdinal(r.place, true)}</span> / <span>${Player.scoringFn(r)} ${getPts(true)}</span></div>`
+  )
 
   ele.addEventListener('click', () => {
     window.open(r.run.weblink)
@@ -55,19 +58,7 @@ const getTableHeader = (str: string[]) => {
 const getPlayerTable = (s: PlayerState) => {
   const p = s.player
 
-  const t = document.createElement('table')
-  t.classList.add('player-table')
-
-  const head = getTableHeader([
-    'Stage',
-    TableSelection.A_SIDES,
-    TableSelection.COLLECTIBLES,
-    TableSelection.B_SIDES,
-    TableSelection.C_SIDES
-  ]) as HTMLElement
-  t.appendChild(head)
-
-  const chapters = [
+  const CHAPTERS = [
     ChapterNames.C1,
     ChapterNames.C2,
     ChapterNames.C3,
@@ -79,7 +70,21 @@ const getPlayerTable = (s: PlayerState) => {
     ChapterNames.C9
   ]
 
-  const tableRows = chapters.map((chapter, i) => {
+  const t = document.createElement('table')
+  t.classList.add('player-table')
+
+  // header
+  const head = getTableHeader([
+    'Stage',
+    TableSelection.A_SIDES,
+    TableSelection.COLLECTIBLES,
+    TableSelection.B_SIDES,
+    TableSelection.C_SIDES
+  ]) as HTMLElement
+  t.appendChild(head)
+
+  // main content
+  const tableRows = CHAPTERS.map((chapter, i) => {
     let runElements
 
     if (chapter === ChapterNames.C9) {
@@ -95,11 +100,12 @@ const getPlayerTable = (s: PlayerState) => {
       ].map(r => getRunElement(r))
     }
 
-    const x = [htmlToElement(`<td class="bold player-table-chapter">${chapter}</td>`)].concat(runElements)
-    return getTableElement(x.map(e => e as HTMLElement))
+    const chapterElements = [htmlToElement(`<td class="bold player-table-chapter">${chapter}</td>`)].concat(runElements)
+    return getTableElement(chapterElements.map(e => e as HTMLElement))
   })
   tableRows.forEach(e => t.appendChild(e))
 
+  // footer
   const pointsPerCol = getTableHeader(
     ['Totals'].concat([
       p!.getPointsOfColumn(0),

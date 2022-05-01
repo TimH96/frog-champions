@@ -10,30 +10,23 @@ const getTableElement = (
   points: string | number
 ) => {
   const ele = htmlToElement(`
-        <tr class="hover-highlight">
-            <td class="bold">${place}</td>
-            <td>${player.name}</td>
-            <td>${points} ${getPts(true)}</td>
-        </tr>
-    `)
+    <tr class="hover-highlight">
+      <td class="bold">${place}</td>
+      <td>${player.name}</td>
+      <td>${points} ${getPts(true)}</td>
+    </tr>
+  `)
+
   ele.addEventListener('click', () => {
     window.open(`./player.html?player=${player.id}`, '_blank')!.focus()
   })
+
   return ele
 }
 
-const getTableHeader = (
-  place: string,
-  name: string,
-  points: string
-) => {
-  return htmlToElement(`
-        <tr>
-            <th>${place}</th>
-            <th>${name}</th>
-            <th>${points}</th>
-        </tr>
-    `)
+const getTableHeader = (str: string[]) => {
+  const x = str.map(e => `<th>${e}</th>`).join('')
+  return htmlToElement(`<tr>${x}</tr>`)
 }
 
 const getLeaderboardTable = (s: AppState, arr: Player[]) => {
@@ -41,7 +34,7 @@ const getLeaderboardTable = (s: AppState, arr: Player[]) => {
   const getter = getPointsGetter(s.tableSelection)
   t.classList.add('leaderboard-table')
 
-  const head = getTableHeader('Place', 'Name', 'Points') as HTMLElement
+  const head = getTableHeader(['Place', 'Name', 'Points']) as HTMLElement
   t.appendChild(head)
 
   arr.forEach((p, i) => t.appendChild(getTableElement(
