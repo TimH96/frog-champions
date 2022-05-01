@@ -708,26 +708,6 @@ var removeFarewellObsoletes = function removeFarewellObsoletes(grid) {
 };
 
 exports.removeFarewellObsoletes = removeFarewellObsoletes;
-},{}],"../../modules/rankings/scoring.ts":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var eliteScoring = function eliteScoring(run) {
-  if (run.place === 1) {
-    return 100;
-  }
-
-  if (run.place === 2) {
-    return 97;
-  }
-
-  return Math.max(0, 98 - run.place);
-};
-
-exports.eliteScoring = eliteScoring;
 },{}],"../../modules/rankings/models/Player.ts":[function(require,module,exports) {
 "use strict";
 
@@ -876,8 +856,6 @@ Object.defineProperty(exports, "__esModule", {
 
 var wrapper_1 = require("../../speedruncom/wrapper");
 
-var scoring_1 = require("../scoring");
-
 var Player =
 /** @class */
 function () {
@@ -894,8 +872,13 @@ function () {
   /** register run r in the grid at position i, j */
 
 
-  Player.prototype.registerRun = function (r, i, j) {
-    this.timesPage[i][j] = r;
+  Player.prototype.registerRun = function (r, s, i, j) {
+    var x = {
+      place: r.place,
+      run: r.run,
+      score: s
+    };
+    this.timesPage[i][j] = x;
   };
 
   Player.prototype.getPointsOfColumn = function (col) {
@@ -904,7 +887,7 @@ function () {
     }
 
     var val = this.timesPage[col].reduce(function (sum, r) {
-      return sum + Player.scoringFn(r);
+      return sum + r.score;
     }, 0);
     this._pointsPerColumn[col] = val;
     return val;
@@ -996,12 +979,40 @@ function () {
     });
   };
 
-  Player.scoringFn = scoring_1.eliteScoring;
   return Player;
 }();
 
 exports.default = Player;
-},{"../../speedruncom/wrapper":"../../modules/speedruncom/wrapper.ts","../scoring":"../../modules/rankings/scoring.ts"}],"../../modules/rankings/build-map.ts":[function(require,module,exports) {
+},{"../../speedruncom/wrapper":"../../modules/speedruncom/wrapper.ts"}],"../../modules/rankings/scoring.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var eliteScoring = function eliteScoring(run) {
+  if (run.place === 1) {
+    return 100;
+  }
+
+  if (run.place === 2) {
+    return 97;
+  }
+
+  return Math.max(0, 98 - run.place);
+};
+
+exports.eliteScoring = eliteScoring;
+
+var getPercentScoreFn = function getPercentScoreFn(wrTime) {
+  return function (r) {
+    var t = r.run.times.primary_t;
+    return Math.round(wrTime / t * 1000);
+  };
+};
+
+exports.getPercentScoreFn = getPercentScoreFn;
+},{}],"../../modules/rankings/build-map.ts":[function(require,module,exports) {
 "use strict";
 
 var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, generator) {
@@ -1157,6 +1168,8 @@ Object.defineProperty(exports, "__esModule", {
 
 var Player_1 = __importDefault(require("./models/Player"));
 
+var scoring_1 = require("./scoring");
+
 var buildPlayerMap = function buildPlayerMap(grid) {
   return __awaiter(_this, void 0, Promise, function () {
     var pMap, gridDimensions;
@@ -1167,13 +1180,14 @@ var buildPlayerMap = function buildPlayerMap(grid) {
       });
       grid.forEach(function (levelColumn, i) {
         return levelColumn.forEach(function (board, j) {
-          return board.runs.forEach(function (r) {
+          var fn = scoring_1.getPercentScoreFn(board.runs[0].run.times.primary_t);
+          board.runs.forEach(function (r) {
             var p = r.run.players[0]; // skip players without id (deleted users)
 
             if (p.id) {
               pMap.has(p.id) || pMap.set(p.id, new Player_1.default(p.id, gridDimensions));
               var pl = pMap.get(p.id);
-              pl.registerRun(r, i, j);
+              pl.registerRun(r, fn(r), i, j);
             }
           });
         });
@@ -1186,7 +1200,7 @@ var buildPlayerMap = function buildPlayerMap(grid) {
 };
 
 exports.default = buildPlayerMap;
-},{"./models/Player":"../../modules/rankings/models/Player.ts"}],"../../modules/rankings/get-map.ts":[function(require,module,exports) {
+},{"./models/Player":"../../modules/rankings/models/Player.ts","./scoring":"../../modules/rankings/scoring.ts"}],"../../modules/rankings/get-map.ts":[function(require,module,exports) {
 "use strict";
 
 var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, generator) {
@@ -1525,8 +1539,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var Player_1 = __importDefault(require("../../../modules/rankings/models/Player"));
-
 var celeste_1 = require("../../../modules/speedruncom/constants/celeste");
 
 var TableSelection_1 = __importDefault(require("../../models/TableSelection"));
@@ -1538,14 +1550,18 @@ var time_helper_1 = require("../util/time-helper");
 var subtexts_1 = require("./subtexts");
 
 var getRunElement = function getRunElement(r) {
+  var getTd = function getTd(row1, row2) {
+    return html_helper_1.default("\n      <td class=\"hover-highlight\">\n        <div class=\"player-table-run\">\n          " + row1 + "\n          " + row2 + "\n        </div>\n      </td>\n    ");
+  };
+
   if (!r) {
-    return html_helper_1.default("\n      <td class=\"hover-highlight\">\n        <div class=\"player-table-run\">\n          <span>---------</span>\n          <span>---------</span>\n        </div>\n      </td>\n    ");
+    return getTd('<span>---------</span>', '<span>---------</span>');
   }
 
   var timeSplit = String(r.run.times.primary_t).split('.');
   var withoutMs = timeSplit[0];
   var onlyMs = timeSplit.length === 2 ? timeSplit[1].padEnd(3, '0') : '000';
-  var ele = html_helper_1.default("\n    <td class=\"hover-highlight\">\n      <div class=\"player-table-run\">\n        <span>" + time_helper_1.toHHMMSS(withoutMs) + "." + subtexts_1.getMs(onlyMs, true) + "</span>\n        <div><span>" + r.place + subtexts_1.getOrdinal(r.place, true) + "</span> / <span>" + Player_1.default.scoringFn(r) + " " + subtexts_1.getPts(true) + "</span></div>\n      </div>\n    </td>\n  ");
+  var ele = getTd("<span>" + time_helper_1.toHHMMSS(withoutMs) + "." + subtexts_1.getMs(onlyMs, true) + "</span>", "<div><span>" + r.place + subtexts_1.getOrdinal(r.place, true) + "</span> / <span>" + r.score + " " + subtexts_1.getPts(true) + "</span></div>");
   ele.addEventListener('click', function () {
     window.open(r.run.weblink);
   });
@@ -1569,12 +1585,14 @@ var getTableHeader = function getTableHeader(str) {
 
 var getPlayerTable = function getPlayerTable(s) {
   var p = s.player;
+  var CHAPTERS = [celeste_1.ChapterNames.C1, celeste_1.ChapterNames.C2, celeste_1.ChapterNames.C3, celeste_1.ChapterNames.C4, celeste_1.ChapterNames.C5, celeste_1.ChapterNames.C6, celeste_1.ChapterNames.C7, celeste_1.ChapterNames.C8, celeste_1.ChapterNames.C9];
   var t = document.createElement('table');
-  t.classList.add('player-table');
+  t.classList.add('player-table'); // header
+
   var head = getTableHeader(['Stage', TableSelection_1.default.A_SIDES, TableSelection_1.default.COLLECTIBLES, TableSelection_1.default.B_SIDES, TableSelection_1.default.C_SIDES]);
-  t.appendChild(head);
-  var chapters = [celeste_1.ChapterNames.C1, celeste_1.ChapterNames.C2, celeste_1.ChapterNames.C3, celeste_1.ChapterNames.C4, celeste_1.ChapterNames.C5, celeste_1.ChapterNames.C6, celeste_1.ChapterNames.C7, celeste_1.ChapterNames.C8, celeste_1.ChapterNames.C9];
-  var tableRows = chapters.map(function (chapter, i) {
+  t.appendChild(head); // main content
+
+  var tableRows = CHAPTERS.map(function (chapter, i) {
     var runElements;
 
     if (chapter === celeste_1.ChapterNames.C9) {
@@ -1587,14 +1605,15 @@ var getPlayerTable = function getPlayerTable(s) {
       });
     }
 
-    var x = [html_helper_1.default("<td class=\"bold player-table-chapter\">" + chapter + "</td>")].concat(runElements);
-    return getTableElement(x.map(function (e) {
+    var chapterElements = [html_helper_1.default("<td class=\"bold player-table-chapter\">" + chapter + "</td>")].concat(runElements);
+    return getTableElement(chapterElements.map(function (e) {
       return e;
     }));
   });
   tableRows.forEach(function (e) {
     return t.appendChild(e);
-  });
+  }); // footer
+
   var pointsPerCol = getTableHeader(['Totals'].concat([p.getPointsOfColumn(0), p.getPointsOfColumn(1), p.getPointsOfColumn(2), p.getPointsOfColumn(3)].map(function (e) {
     return String(e) + " points";
   })));
@@ -1603,7 +1622,7 @@ var getPlayerTable = function getPlayerTable(s) {
 };
 
 exports.default = getPlayerTable;
-},{"../../../modules/rankings/models/Player":"../../modules/rankings/models/Player.ts","../../../modules/speedruncom/constants/celeste":"../../modules/speedruncom/constants/celeste.ts","../../models/TableSelection":"../models/TableSelection.ts","../util/html-helper":"../ui/util/html-helper.ts","../util/time-helper":"../ui/util/time-helper.ts","./subtexts":"../ui/components/subtexts.ts"}],"../ui/components/total-points-count.ts":[function(require,module,exports) {
+},{"../../../modules/speedruncom/constants/celeste":"../../modules/speedruncom/constants/celeste.ts","../../models/TableSelection":"../models/TableSelection.ts","../util/html-helper":"../ui/util/html-helper.ts","../util/time-helper":"../ui/util/time-helper.ts","./subtexts":"../ui/components/subtexts.ts"}],"../ui/components/total-points-count.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1614,7 +1633,7 @@ var getTotalPointsCount = function getTotalPointsCount(s) {
   var x = document.createElement('span');
   x.classList.add('center');
   x.classList.add('total-points');
-  x.innerHTML = "Total: " + s.player.totalPoints;
+  x.innerHTML = "Total: " + s.player.totalPoints + " points";
   return x;
 };
 
@@ -1779,14 +1798,12 @@ var player_table_1 = __importDefault(require("./player-table"));
 
 var total_points_count_1 = __importDefault(require("./total-points-count"));
 
-var renderPlayerPage = function renderPlayerPage(state, id) {
+var renderPlayerPage = function renderPlayerPage(state, container) {
   return __awaiter(_this, void 0, Promise, function () {
-    var container, reset, name;
+    var reset, name;
     return __generator(this, function (_a) {
       switch (_a.label) {
         case 0:
-          container = document.getElementById(id);
-
           reset = function reset() {
             container.innerHTML = '';
           };
@@ -1822,7 +1839,26 @@ var renderPlayerPage = function renderPlayerPage(state, id) {
 };
 
 exports.default = renderPlayerPage;
-},{"../util/html-helper":"../ui/util/html-helper.ts","./player-table":"../ui/components/player-table.ts","./total-points-count":"../ui/components/total-points-count.ts"}],"player.ts":[function(require,module,exports) {
+},{"../util/html-helper":"../ui/util/html-helper.ts","./player-table":"../ui/components/player-table.ts","./total-points-count":"../ui/components/total-points-count.ts"}],"../ui/components/loader.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var getLoader = function getLoader() {
+  var _a;
+
+  var x = document.createElement('div');
+
+  (_a = x.classList).add.apply(_a, ['loader', 'center']);
+
+  x.innerHTML = 'Loading ...';
+  return x;
+};
+
+exports.default = getLoader;
+},{}],"player.ts":[function(require,module,exports) {
 "use strict";
 
 var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, generator) {
@@ -1982,6 +2018,8 @@ var player_page_1 = __importDefault(require("../ui/components/player-page"));
 
 var wrapper_1 = require("../../modules/speedruncom/wrapper");
 
+var loader_1 = __importDefault(require("../ui/components/loader"));
+
 var main = function main() {
   return __awaiter(_this, void 0, void 0, function () {
     var CONTAINER, render, abort, playerParam, id, _a, pMap;
@@ -1989,7 +2027,8 @@ var main = function main() {
     return __generator(this, function (_b) {
       switch (_b.label) {
         case 0:
-          CONTAINER = 'player-container';
+          CONTAINER = document.getElementById('player-container');
+          CONTAINER.appendChild(loader_1.default());
 
           render = function render(s) {
             return player_page_1.default(s, CONTAINER);
@@ -2067,7 +2106,7 @@ var main = function main() {
 };
 
 main();
-},{"../../modules/rankings/get-map":"../../modules/rankings/get-map.ts","../ui/components/player-page":"../ui/components/player-page.ts","../../modules/speedruncom/wrapper":"../../modules/speedruncom/wrapper.ts"}],"../../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"../../modules/rankings/get-map":"../../modules/rankings/get-map.ts","../ui/components/player-page":"../ui/components/player-page.ts","../../modules/speedruncom/wrapper":"../../modules/speedruncom/wrapper.ts","../ui/components/loader":"../ui/components/loader.ts"}],"../../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -2095,7 +2134,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55945" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60206" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

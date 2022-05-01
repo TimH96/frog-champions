@@ -742,26 +742,6 @@ var removeFarewellObsoletes = function removeFarewellObsoletes(grid) {
 };
 
 exports.removeFarewellObsoletes = removeFarewellObsoletes;
-},{}],"../../modules/rankings/scoring.ts":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var eliteScoring = function eliteScoring(run) {
-  if (run.place === 1) {
-    return 100;
-  }
-
-  if (run.place === 2) {
-    return 97;
-  }
-
-  return Math.max(0, 98 - run.place);
-};
-
-exports.eliteScoring = eliteScoring;
 },{}],"../../modules/rankings/models/Player.ts":[function(require,module,exports) {
 "use strict";
 
@@ -910,8 +890,6 @@ Object.defineProperty(exports, "__esModule", {
 
 var wrapper_1 = require("../../speedruncom/wrapper");
 
-var scoring_1 = require("../scoring");
-
 var Player =
 /** @class */
 function () {
@@ -928,8 +906,13 @@ function () {
   /** register run r in the grid at position i, j */
 
 
-  Player.prototype.registerRun = function (r, i, j) {
-    this.timesPage[i][j] = r;
+  Player.prototype.registerRun = function (r, s, i, j) {
+    var x = {
+      place: r.place,
+      run: r.run,
+      score: s
+    };
+    this.timesPage[i][j] = x;
   };
 
   Player.prototype.getPointsOfColumn = function (col) {
@@ -938,7 +921,7 @@ function () {
     }
 
     var val = this.timesPage[col].reduce(function (sum, r) {
-      return sum + Player.scoringFn(r);
+      return sum + r.score;
     }, 0);
     this._pointsPerColumn[col] = val;
     return val;
@@ -1030,12 +1013,40 @@ function () {
     });
   };
 
-  Player.scoringFn = scoring_1.eliteScoring;
   return Player;
 }();
 
 exports.default = Player;
-},{"../../speedruncom/wrapper":"../../modules/speedruncom/wrapper.ts","../scoring":"../../modules/rankings/scoring.ts"}],"../../modules/rankings/build-map.ts":[function(require,module,exports) {
+},{"../../speedruncom/wrapper":"../../modules/speedruncom/wrapper.ts"}],"../../modules/rankings/scoring.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var eliteScoring = function eliteScoring(run) {
+  if (run.place === 1) {
+    return 100;
+  }
+
+  if (run.place === 2) {
+    return 97;
+  }
+
+  return Math.max(0, 98 - run.place);
+};
+
+exports.eliteScoring = eliteScoring;
+
+var getPercentScoreFn = function getPercentScoreFn(wrTime) {
+  return function (r) {
+    var t = r.run.times.primary_t;
+    return Math.round(wrTime / t * 1000);
+  };
+};
+
+exports.getPercentScoreFn = getPercentScoreFn;
+},{}],"../../modules/rankings/build-map.ts":[function(require,module,exports) {
 "use strict";
 
 var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, generator) {
@@ -1191,6 +1202,8 @@ Object.defineProperty(exports, "__esModule", {
 
 var Player_1 = __importDefault(require("./models/Player"));
 
+var scoring_1 = require("./scoring");
+
 var buildPlayerMap = function buildPlayerMap(grid) {
   return __awaiter(_this, void 0, Promise, function () {
     var pMap, gridDimensions;
@@ -1201,13 +1214,14 @@ var buildPlayerMap = function buildPlayerMap(grid) {
       });
       grid.forEach(function (levelColumn, i) {
         return levelColumn.forEach(function (board, j) {
-          return board.runs.forEach(function (r) {
+          var fn = scoring_1.getPercentScoreFn(board.runs[0].run.times.primary_t);
+          board.runs.forEach(function (r) {
             var p = r.run.players[0]; // skip players without id (deleted users)
 
             if (p.id) {
               pMap.has(p.id) || pMap.set(p.id, new Player_1.default(p.id, gridDimensions));
               var pl = pMap.get(p.id);
-              pl.registerRun(r, i, j);
+              pl.registerRun(r, fn(r), i, j);
             }
           });
         });
@@ -1220,7 +1234,7 @@ var buildPlayerMap = function buildPlayerMap(grid) {
 };
 
 exports.default = buildPlayerMap;
-},{"./models/Player":"../../modules/rankings/models/Player.ts"}],"../../modules/rankings/get-map.ts":[function(require,module,exports) {
+},{"./models/Player":"../../modules/rankings/models/Player.ts","./scoring":"../../modules/rankings/scoring.ts"}],"../../modules/rankings/get-map.ts":[function(require,module,exports) {
 "use strict";
 
 var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, generator) {
@@ -1633,22 +1647,25 @@ var points_getter_1 = __importDefault(require("../util/points-getter"));
 var subtexts_1 = require("./subtexts");
 
 var getTableElement = function getTableElement(place, player, points) {
-  var ele = html_helper_1.default("\n        <tr class=\"hover-highlight\">\n            <td class=\"bold\">" + place + "</td>\n            <td>" + player.name + "</td>\n            <td>" + points + " " + subtexts_1.getPts(true) + "</td>\n        </tr>\n    ");
+  var ele = html_helper_1.default("\n    <tr class=\"hover-highlight\">\n      <td class=\"bold\">" + place + "</td>\n      <td>" + player.name + "</td>\n      <td>" + points + " " + subtexts_1.getPts(true) + "</td>\n    </tr>\n  ");
   ele.addEventListener('click', function () {
     window.open("./player.html?player=" + player.id, '_blank').focus();
   });
   return ele;
 };
 
-var getTableHeader = function getTableHeader(place, name, points) {
-  return html_helper_1.default("\n        <tr>\n            <th>" + place + "</th>\n            <th>" + name + "</th>\n            <th>" + points + "</th>\n        </tr>\n    ");
+var getTableHeader = function getTableHeader(str) {
+  var x = str.map(function (e) {
+    return "<th>" + e + "</th>";
+  }).join('');
+  return html_helper_1.default("<tr>" + x + "</tr>");
 };
 
 var getLeaderboardTable = function getLeaderboardTable(s, arr) {
   var t = document.createElement('table');
   var getter = points_getter_1.default(s.tableSelection);
   t.classList.add('leaderboard-table');
-  var head = getTableHeader('Place', 'Name', 'Points');
+  var head = getTableHeader(['Place', 'Name', 'Points']);
   t.appendChild(head);
   arr.forEach(function (p, i) {
     return t.appendChild(getTableElement(i + 1, p, getter(p)));
@@ -1695,24 +1712,23 @@ exports.default = getLoadMoreButton;
 },{"../../models/AppEvent":"../models/AppEvent.ts"}],"../ui/components/loader.ts":[function(require,module,exports) {
 "use strict";
 
-var __importDefault = this && this.__importDefault || function (mod) {
-  return mod && mod.__esModule ? mod : {
-    "default": mod
-  };
-};
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var html_helper_1 = __importDefault(require("../util/html-helper"));
-
 var getLoader = function getLoader() {
-  return html_helper_1.default('<div class="loader center">Loading...</div>');
+  var _a;
+
+  var x = document.createElement('div');
+
+  (_a = x.classList).add.apply(_a, ['loader', 'center']);
+
+  x.innerHTML = 'Loading ...';
+  return x;
 };
 
 exports.default = getLoader;
-},{"../util/html-helper":"../ui/util/html-helper.ts"}],"../ui/components/main-page.ts":[function(require,module,exports) {
+},{}],"../ui/components/main-page.ts":[function(require,module,exports) {
 "use strict";
 
 var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, generator) {
@@ -1876,17 +1892,15 @@ var load_more_button_1 = __importDefault(require("./load-more-button"));
 
 var loader_1 = __importDefault(require("./loader"));
 
-var renderMainPage = function renderMainPage(state, id) {
+var renderMainPage = function renderMainPage(state, container) {
   return __awaiter(_this, void 0, Promise, function () {
-    var container, reset, arr;
+    var reset, arr;
 
     var _this = this;
 
     return __generator(this, function (_a) {
       switch (_a.label) {
         case 0:
-          container = document.getElementById(id);
-
           reset = function reset() {
             container.innerHTML = '';
           };
@@ -2098,13 +2112,16 @@ var get_map_1 = __importDefault(require("../../modules/rankings/get-map"));
 
 var main_page_1 = __importDefault(require("../ui/components/main-page"));
 
+var loader_1 = __importDefault(require("../ui/components/loader"));
+
 var main = function main() {
   return __awaiter(_this, void 0, void 0, function () {
     var CONTAINER, pMap, initialState;
     return __generator(this, function (_a) {
       switch (_a.label) {
         case 0:
-          CONTAINER = 'dynamic-container';
+          CONTAINER = document.getElementById('dynamic-container');
+          CONTAINER.appendChild(loader_1.default());
           return [4
           /*yield*/
           , get_map_1.default()];
@@ -2135,7 +2152,7 @@ var main = function main() {
 };
 
 main();
-},{"../models/AppEvent":"../models/AppEvent.ts","../models/TableSelection":"../models/TableSelection.ts","../../modules/rankings/get-map":"../../modules/rankings/get-map.ts","../ui/components/main-page":"../ui/components/main-page.ts"}],"../../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"../models/AppEvent":"../models/AppEvent.ts","../models/TableSelection":"../models/TableSelection.ts","../../modules/rankings/get-map":"../../modules/rankings/get-map.ts","../ui/components/main-page":"../ui/components/main-page.ts","../ui/components/loader":"../ui/components/loader.ts"}],"../../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -2163,7 +2180,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55945" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60206" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

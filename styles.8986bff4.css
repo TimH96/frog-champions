@@ -66,6 +66,10 @@ h2 {
   margin-bottom: 4em;
 }
 
+#algorithm {
+  font-size: 17px;
+}
+
 /* specific element classes */
 .control-buttons {
   display: grid;
