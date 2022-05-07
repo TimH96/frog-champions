@@ -1,8 +1,8 @@
-# Celeste Elite Rankings
+# FrogChampions
 
 ## About
 
-This is a ranking system for Celeste Individual Level speedruns, using data from [speedrun.com](https://www.speedrun.com/celeste/levels). You can find the rankings and more info about them right [here](https://timh96.github.io/celeste-elite-rankings/).
+This is a ranking system for Celeste Individual Level speedruns, using data from [speedrun.com](https://www.speedrun.com/celeste/levels). You can find the rankings and more info about them right [here](https://timh96.github.io/frog-champions/).
 
 ## Development
 
@@ -11,8 +11,8 @@ This is a ranking system for Celeste Individual Level speedruns, using data from
 Clone the repo and install its dependencies.
 
 ```shell
-$ git clone https://github.com/TimH96/celeste-elite-rankings
-$ cd celeste-elite-rankings
+$ git clone https://github.com/TimH96/frog-champions
+$ cd frog-champions
 $ npm i
 $ npm run prepare
 ```
