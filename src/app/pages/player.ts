@@ -18,24 +18,29 @@ const main = async () => {
   }
 
   const playerParam = new URLSearchParams(window.location.search).get('player')
-
   if (!playerParam) {
     return abort()
   }
 
+  const pMap = await getPlayerMap()
+
+  // render if id exists in table
+  if (pMap.has(playerParam)) {
+    await render({ player: pMap.get(playerParam) })
+    return
+  }
+
+  // try fetching id if name is given instead
   let id: SpeedrunId
   try {
     id = await (await fetchUser(playerParam)).data.id
+    if (!pMap.has(id)) {
+      throw new Error()
+    }
+    await render({ player: pMap.get(id) })
   } catch {
     return abort()
   }
-
-  const pMap = await getPlayerMap()
-  if (!pMap.get(id)) {
-    return abort()
-  }
-
-  await render({ player: pMap.get(id) })
 }
 
 main()
