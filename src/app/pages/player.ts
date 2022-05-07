@@ -26,8 +26,7 @@ const main = async () => {
 
   // render if id exists in table
   if (pMap.has(playerParam)) {
-    await render({ player: pMap.get(playerParam) })
-    return
+    return await render({ player: pMap.get(playerParam) })
   }
 
   // try fetching id if name is given instead
