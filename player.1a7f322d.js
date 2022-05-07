@@ -2065,11 +2065,9 @@ var main = function main() {
           })];
 
         case 2:
-          _b.sent();
-
           return [2
           /*return*/
-          ];
+          , _b.sent()];
 
         case 3:
           _b.trys.push([3, 7,, 8]);
