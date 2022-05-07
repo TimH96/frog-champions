@@ -2022,7 +2022,7 @@ var loader_1 = __importDefault(require("../ui/components/loader"));
 
 var main = function main() {
   return __awaiter(_this, void 0, void 0, function () {
-    var CONTAINER, render, abort, playerParam, id, _a, pMap;
+    var CONTAINER, render, abort, playerParam, pMap, id, _a;
 
     return __generator(this, function (_b) {
       switch (_b.label) {
@@ -2048,44 +2048,46 @@ var main = function main() {
             , abort()];
           }
 
-          _b.label = 1;
+          return [4
+          /*yield*/
+          , get_map_1.default() // render if id exists in table
+          ];
 
         case 1:
-          _b.trys.push([1, 4,, 5]);
+          pMap = _b.sent();
+          if (!pMap.has(playerParam)) return [3
+          /*break*/
+          , 3];
+          return [4
+          /*yield*/
+          , render({
+            player: pMap.get(playerParam)
+          })];
+
+        case 2:
+          _b.sent();
+
+          return [2
+          /*return*/
+          ];
+
+        case 3:
+          _b.trys.push([3, 7,, 8]);
 
           return [4
           /*yield*/
           , wrapper_1.fetchUser(playerParam)];
 
-        case 2:
+        case 4:
           return [4
           /*yield*/
           , _b.sent().data.id];
 
-        case 3:
-          id = _b.sent();
-          return [3
-          /*break*/
-          , 5];
-
-        case 4:
-          _a = _b.sent();
-          return [2
-          /*return*/
-          , abort()];
-
         case 5:
-          return [4
-          /*yield*/
-          , get_map_1.default()];
+          id = _b.sent();
 
-        case 6:
-          pMap = _b.sent();
-
-          if (!pMap.get(id)) {
-            return [2
-            /*return*/
-            , abort()];
+          if (!pMap.has(id)) {
+            throw new Error();
           }
 
           return [4
@@ -2094,9 +2096,20 @@ var main = function main() {
             player: pMap.get(id)
           })];
 
-        case 7:
+        case 6:
           _b.sent();
 
+          return [3
+          /*break*/
+          , 8];
+
+        case 7:
+          _a = _b.sent();
+          return [2
+          /*return*/
+          , abort()];
+
+        case 8:
           return [2
           /*return*/
           ];
@@ -2134,7 +2147,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49228" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54170" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
