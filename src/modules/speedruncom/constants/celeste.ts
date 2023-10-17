@@ -6,6 +6,7 @@ const GAME_NAME = 'Celeste'
 
 const COLLECTIBLES_VARIABLE_NAME = 'Full Clear / ARB / HC'
 const FC_RUN_VALUE = 'Full Clear'
+const ARB_RUN_VALUE = 'All Red Berries'
 
 enum Categories {
     A_SIDES = 'Clear',
@@ -26,4 +27,4 @@ enum ChapterNames {
     C9 = 'Farewell',
 }
 
-export { GAME_ID, GAME_NAME, COLLECTIBLES_VARIABLE_NAME, FC_RUN_VALUE, Categories, ChapterNames }
+export { GAME_ID, GAME_NAME, COLLECTIBLES_VARIABLE_NAME, FC_RUN_VALUE, ARB_RUN_VALUE, Categories, ChapterNames }
