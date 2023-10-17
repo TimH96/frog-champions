@@ -165,6 +165,12 @@ var COLLECTIBLES_VARIABLE_NAME = 'Full Clear / ARB / HC';
 exports.COLLECTIBLES_VARIABLE_NAME = COLLECTIBLES_VARIABLE_NAME;
 var FC_RUN_VALUE = 'Full Clear';
 exports.FC_RUN_VALUE = FC_RUN_VALUE;
+var ARB_RUN_VALUE = 'All Red Berries';
+exports.ARB_RUN_VALUE = ARB_RUN_VALUE;
+var CORE_FC_VARIABLE_NAME = 'Full Clear';
+exports.CORE_FC_VARIABLE_NAME = CORE_FC_VARIABLE_NAME;
+var CORE_FC_RUN_VALUE = 'Yes';
+exports.CORE_FC_RUN_VALUE = CORE_FC_RUN_VALUE;
 var Categories;
 
 (function (Categories) {
@@ -367,14 +373,18 @@ var fetchLevelBoard = function fetchLevelBoard(level, category) {
 
 exports.fetchLevelBoard = fetchLevelBoard;
 
-var fetchLevelBoardWithVariable = function fetchLevelBoardWithVariable(level, category, varId, val) {
+var fetchLevelBoardWithVariables = function fetchLevelBoardWithVariables(level, category, variables) {
   return __awaiter(_this, void 0, Promise, function () {
+    var variableString;
     return __generator(this, function (_a) {
       switch (_a.label) {
         case 0:
+          variableString = variables.map(function (x) {
+            return "var-" + x.variableId + "=" + x.valueId;
+          }).join('&');
           return [4
           /*yield*/
-          , fetch(getBasePath() + "/leaderboards/" + celeste_1.GAME_ID + "/level/" + level.id + "/" + category.id + "?var-" + varId + "=" + val)];
+          , fetch(getBasePath() + "/leaderboards/" + celeste_1.GAME_ID + "/level/" + level.id + "/" + category.id + "?" + variableString)];
 
         case 1:
           return [2
@@ -385,7 +395,7 @@ var fetchLevelBoardWithVariable = function fetchLevelBoardWithVariable(level, ca
   });
 };
 
-exports.fetchLevelBoardWithVariable = fetchLevelBoardWithVariable;
+exports.fetchLevelBoardWithVariables = fetchLevelBoardWithVariables;
 
 var fetchLevels = function fetchLevels() {
   return __awaiter(_this, void 0, Promise, function () {
@@ -668,17 +678,36 @@ var getRawLeaderboardData = function getRawLeaderboardData() {
           /*yield*/
           , Promise.all(categories.data.map(function (cat) {
             return Promise.all(levels.data.map(function (lvl, i) {
-              if (cat.name === celeste_1.Categories.COLLECTIBLES && lvl.name !== celeste_1.ChapterNames.C9) {
-                // find the 2 relevant IDs based on variable name and run value label
-                var variable = variables[i].data.find(function (x) {
-                  return x.name === celeste_1.COLLECTIBLES_VARIABLE_NAME;
-                });
-                var value = Object.entries(variable.values.values).find(function (_a) {
-                  var _key = _a[0],
-                      val = _a[1];
-                  return val.label === celeste_1.FC_RUN_VALUE;
-                });
-                return wrapper_1.fetchLevelBoardWithVariable(lvl, cat, variable.id, value[0]);
+              if (cat.name === celeste_1.Categories.COLLECTIBLES) {
+                if (lvl.name === celeste_1.ChapterNames.C9) return wrapper_1.fetchLevelBoard(lvl, cat);
+                var catVars_1 = variables[i];
+                var queryVars = [];
+
+                var findVariable = function findVariable(varName, valLabel) {
+                  // find the 2 relevant IDs based on variable name and run value label
+                  var variable = catVars_1.data.find(function (x) {
+                    return x.name === varName;
+                  });
+                  var value = Object.entries(variable.values.values).find(function (_a) {
+                    var _key = _a[0],
+                        val = _a[1];
+                    return val.label === valLabel;
+                  });
+                  return {
+                    variableId: variable.id,
+                    valueId: value[0]
+                  };
+                }; // Core has a very different FC leaderboard structure, with ARB as category label and a FC run var
+
+
+                var isCore = lvl.name === celeste_1.ChapterNames.C8;
+                queryVars.push(findVariable(celeste_1.COLLECTIBLES_VARIABLE_NAME, isCore ? celeste_1.ARB_RUN_VALUE : celeste_1.FC_RUN_VALUE));
+
+                if (isCore) {
+                  queryVars.push(findVariable(celeste_1.CORE_FC_VARIABLE_NAME, celeste_1.CORE_FC_RUN_VALUE));
+                }
+
+                return wrapper_1.fetchLevelBoardWithVariables(lvl, cat, queryVars);
               }
 
               return wrapper_1.fetchLevelBoard(lvl, cat);
@@ -2180,7 +2209,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54170" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64192" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
