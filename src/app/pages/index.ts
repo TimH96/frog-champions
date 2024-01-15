@@ -1,4 +1,4 @@
-import AppState from '../states/AppState'
+import AppState, { rankingCriteria } from '../states/AppState'
 import AppEvent from '../models/AppEvent'
 import TableSelection from '../models/TableSelection'
 import getPlayerMap from '../../modules/rankings/get-map'
@@ -15,7 +15,8 @@ const main = async () => {
   const initialState: AppState = {
     players: pMap,
     tableSelection: TableSelection.TOTAL,
-    tableState: 100
+    tableState: 100,
+    rankingCriteria: rankingCriteria.point
   }
 
   document.addEventListener(AppEvent.UPDATE_STATE, ((e: CustomEvent<AppState>) => {

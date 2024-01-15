@@ -34,6 +34,66 @@ td {
 th {
   background-color: var(--highlight);
 }
+th.criteriaSel{
+  background-color: rgb(168, 195, 247);
+}
+
+th.criteriaSel div{
+  position: relative;
+}
+
+span.count{
+  display: inline-block;
+  width: 40px;
+  left:0px;
+  line-height: 20px;
+  position: absolute;
+}
+
+span.count::before{
+  content: "n=";
+  color: #999999;
+  position: absolute;
+  left:5px;
+  font-size: 10px;
+  display: inline-block;
+}
+
+span.confidenceBound{
+  color: #787878;
+  font-size: 12px;
+  line-height: 10px;
+  display: inline-block;
+  vertical-align: top;
+}
+span.confidenceBound::before{
+  content: '±';
+}
+
+span.count span{
+  color: rgb(134, 0, 0);
+  font-weight: 700;
+  position: absolute;
+  right: 0px;
+  display: inline-block;
+}
+
+
+td div{
+  position: relative;
+  text-align: right;
+  padding-right: 0px;
+  width: 140px;
+  display: inline-block;
+}
+
+th.criteriaSel div::after{
+  content:'▾';
+  color:#131313;
+  text-align: left;
+  position:absolute;
+  right:0px;
+}
 
 table {
   width: 100%;

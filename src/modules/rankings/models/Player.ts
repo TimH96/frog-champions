@@ -4,17 +4,35 @@ import RankingGrid from './RankingGrid'
 import { fetchUser } from '../../speedruncom/wrapper'
 import RankedRunWithScore from './RankedRunWithScore'
 
+export type AverageScore = [Count: number, Average: number, ConfidenceBound: number];
+
+function GetAverageStatistics(scores: number[]):AverageScore{
+  const count = scores.length;
+  if(count == 0) return [0,0,0];
+  const sum = scores.reduce((a,b)=>a+b, 0);
+  if(count == 1) return [1,sum,sum];
+  const ssum= scores.reduce((a,b)=>a+b*b, 0);
+  const avg = sum / count;
+  const tdev = ssum - avg*avg*count;
+  const sdev = Math.sqrt(tdev / (count-1));
+  const cbound = 2*sdev/Math.sqrt(count);
+  return [count, avg, cbound];
+}
+
 export default class Player {
   id: SpeedrunId
   timesPage: RankingGrid
 
   private _pointsPerColumn: number[]
+  private _avgScorePerColumn: (AverageScore|null)[]
+  private _totalAvgScore: (AverageScore|null)=null
   private _name: string | null | undefined = undefined
 
   constructor (id: SpeedrunId, gridDimensions: number[]) {
     this.id = id
-    this.timesPage = gridDimensions.map((colSize) => new Array<RankedRunWithScore>(colSize))
+    this.timesPage = gridDimensions.map((colSize) => new Array<RankedRunWithScore|null>(colSize).fill(null))
     this._pointsPerColumn = gridDimensions.map((_) => 0)
+    this._avgScorePerColumn = gridDimensions.map((_) => null)
   }
 
   /** register run r in the grid at position i, j */
@@ -32,12 +50,28 @@ export default class Player {
       return this._pointsPerColumn[col]
     }
 
-    const val = this.timesPage[col].reduce((sum, r) => sum + r.score, 0)
+    const val = this.timesPage[col].filter((x)=>x!=null).reduce((sum, r) => sum + r!.score, 0)
     this._pointsPerColumn[col] = val
 
     return val
   }
 
+  public getAvgScoreOfColumn(col: number): AverageScore{
+    if(this._avgScorePerColumn[col]===null){
+      const list = this.timesPage[col].filter((x)=>x!=null).map((r)=>r!.score);
+      this._avgScorePerColumn[col] = GetAverageStatistics(list);
+    }
+    return this._avgScorePerColumn[col]!;
+  }
+
+  public getAvgScore(): AverageScore{
+    if(this._totalAvgScore === null){
+      const list = this.timesPage.map((r)=>r.filter((x)=>x!=null).map((x)=>x!.score)).reduce((a,b)=>a.concat(b),[]);
+      this._totalAvgScore = GetAverageStatistics(list);
+    }
+    return this._totalAvgScore!;
+  }
+  
   public get totalPoints () {
     return this._pointsPerColumn.reduce((sum, _, i) => sum + this.getPointsOfColumn(i), 0)
   }
