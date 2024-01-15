@@ -117,7 +117,22 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"../models/AppEvent.ts":[function(require,module,exports) {
+})({"../states/AppState.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.rankingCriteria = void 0;
+var rankingCriteria;
+
+(function (rankingCriteria) {
+  rankingCriteria[rankingCriteria["point"] = 0] = "point";
+  rankingCriteria[rankingCriteria["average"] = 1] = "average";
+})(rankingCriteria = exports.rankingCriteria || (exports.rankingCriteria = {}));
+
+;
+},{}],"../models/AppEvent.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -157,6 +172,7 @@ exports.default = TableSelection;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.ChapterNames = exports.Categories = exports.CORE_FC_RUN_VALUE = exports.CORE_FC_VARIABLE_NAME = exports.ARB_RUN_VALUE = exports.FC_RUN_VALUE = exports.COLLECTIBLES_VARIABLE_NAME = exports.GAME_NAME = exports.GAME_ID = void 0;
 var GAME_ID = 'o1y9j9v6';
 exports.GAME_ID = GAME_ID;
 var GAME_NAME = 'Celeste';
@@ -200,6 +216,12 @@ exports.ChapterNames = ChapterNames;
 "use strict";
 
 var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+
   return new (P || (P = Promise))(function (resolve, reject) {
     function fulfilled(value) {
       try {
@@ -218,9 +240,7 @@ var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, gene
     }
 
     function step(result) {
-      result.done ? resolve(result.value) : new P(function (resolve) {
-        resolve(result.value);
-      }).then(fulfilled, rejected);
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
     }
 
     step((generator = generator.apply(thisArg, _arguments || [])).next());
@@ -338,11 +358,10 @@ var __generator = this && this.__generator || function (thisArg, body) {
   }
 };
 
-var _this = this;
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.fetchUser = exports.fetchLevelVariables = exports.fetchLevelCategories = exports.fetchLevels = exports.fetchLevelBoardWithVariables = exports.fetchLevelBoard = void 0;
 
 var celeste_1 = require("./constants/celeste");
 
@@ -354,7 +373,7 @@ var getBasePath = function getBasePath() {
 };
 
 var fetchLevelBoard = function fetchLevelBoard(level, category) {
-  return __awaiter(_this, void 0, Promise, function () {
+  return __awaiter(void 0, void 0, Promise, function () {
     return __generator(this, function (_a) {
       switch (_a.label) {
         case 0:
@@ -374,7 +393,7 @@ var fetchLevelBoard = function fetchLevelBoard(level, category) {
 exports.fetchLevelBoard = fetchLevelBoard;
 
 var fetchLevelBoardWithVariables = function fetchLevelBoardWithVariables(level, category, variables) {
-  return __awaiter(_this, void 0, Promise, function () {
+  return __awaiter(void 0, void 0, Promise, function () {
     var variableString;
     return __generator(this, function (_a) {
       switch (_a.label) {
@@ -398,7 +417,7 @@ var fetchLevelBoardWithVariables = function fetchLevelBoardWithVariables(level, 
 exports.fetchLevelBoardWithVariables = fetchLevelBoardWithVariables;
 
 var fetchLevels = function fetchLevels() {
-  return __awaiter(_this, void 0, Promise, function () {
+  return __awaiter(void 0, void 0, Promise, function () {
     return __generator(this, function (_a) {
       switch (_a.label) {
         case 0:
@@ -423,7 +442,7 @@ var fetchLevels = function fetchLevels() {
 exports.fetchLevels = fetchLevels;
 
 var fetchLevelCategories = function fetchLevelCategories(level) {
-  return __awaiter(_this, void 0, Promise, function () {
+  return __awaiter(void 0, void 0, Promise, function () {
     return __generator(this, function (_a) {
       switch (_a.label) {
         case 0:
@@ -448,7 +467,7 @@ var fetchLevelCategories = function fetchLevelCategories(level) {
 exports.fetchLevelCategories = fetchLevelCategories;
 
 var fetchLevelVariables = function fetchLevelVariables(level) {
-  return __awaiter(_this, void 0, Promise, function () {
+  return __awaiter(void 0, void 0, Promise, function () {
     return __generator(this, function (_a) {
       switch (_a.label) {
         case 0:
@@ -473,7 +492,7 @@ var fetchLevelVariables = function fetchLevelVariables(level) {
 exports.fetchLevelVariables = fetchLevelVariables;
 
 var fetchUser = function fetchUser(user) {
-  return __awaiter(_this, void 0, Promise, function () {
+  return __awaiter(void 0, void 0, Promise, function () {
     return __generator(this, function (_a) {
       switch (_a.label) {
         case 0:
@@ -500,6 +519,12 @@ exports.fetchUser = fetchUser;
 "use strict";
 
 var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+
   return new (P || (P = Promise))(function (resolve, reject) {
     function fulfilled(value) {
       try {
@@ -518,9 +543,7 @@ var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, gene
     }
 
     function step(result) {
-      result.done ? resolve(result.value) : new P(function (resolve) {
-        resolve(result.value);
-      }).then(fulfilled, rejected);
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
     }
 
     step((generator = generator.apply(thisArg, _arguments || [])).next());
@@ -638,18 +661,17 @@ var __generator = this && this.__generator || function (thisArg, body) {
   }
 };
 
-var _this = this;
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.getRawLeaderboardData = void 0;
 
 var wrapper_1 = require("./wrapper");
 
 var celeste_1 = require("./constants/celeste");
 
 var getRawLeaderboardData = function getRawLeaderboardData() {
-  return __awaiter(_this, void 0, Promise, function () {
+  return __awaiter(void 0, void 0, Promise, function () {
     var levels, categories, variables, grid;
     return __generator(this, function (_a) {
       switch (_a.label) {
@@ -689,7 +711,7 @@ var getRawLeaderboardData = function getRawLeaderboardData() {
                     return x.name === varName;
                   });
                   var value = Object.entries(variable.values.values).find(function (_a) {
-                    var _key = _a[0],
+                    var _ = _a[0],
                         val = _a[1];
                     return val.label === valLabel;
                   });
@@ -736,6 +758,7 @@ exports.getRawLeaderboardData = getRawLeaderboardData;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.removeFarewellObsoletes = exports.removeColumn = exports.getGridMapTransformation = void 0;
 /** returns a gridTransformationFunction, using the given callback function in grid.map */
 
 var getGridMapTransformation = function getGridMapTransformation(func) {
@@ -775,6 +798,12 @@ exports.removeFarewellObsoletes = removeFarewellObsoletes;
 "use strict";
 
 var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+
   return new (P || (P = Promise))(function (resolve, reject) {
     function fulfilled(value) {
       try {
@@ -793,9 +822,7 @@ var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, gene
     }
 
     function step(result) {
-      result.done ? resolve(result.value) : new P(function (resolve) {
-        resolve(result.value);
-      }).then(fulfilled, rejected);
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
     }
 
     step((generator = generator.apply(thisArg, _arguments || [])).next());
@@ -919,17 +946,38 @@ Object.defineProperty(exports, "__esModule", {
 
 var wrapper_1 = require("../../speedruncom/wrapper");
 
+function GetAverageStatistics(scores) {
+  var count = scores.length;
+  if (count === 0) return [0, 0, 0];
+  var sum = scores.reduce(function (a, b) {
+    return a + b;
+  }, 0);
+  if (count === 1) return [1, sum, sum];
+  var ssum = scores.reduce(function (a, b) {
+    return a + b * b;
+  }, 0);
+  var avg = sum / count;
+  var tdev = ssum - avg * avg * count;
+  var sdev = Math.sqrt(tdev / (count - 1));
+  var cbound = 2 * sdev / Math.sqrt(count);
+  return [count, avg, cbound];
+}
+
 var Player =
 /** @class */
 function () {
   function Player(id, gridDimensions) {
+    this._totalAvgScore = null;
     this._name = undefined;
     this.id = id;
     this.timesPage = gridDimensions.map(function (colSize) {
-      return new Array(colSize);
+      return new Array(colSize).fill(null);
     });
     this._pointsPerColumn = gridDimensions.map(function (_) {
       return 0;
+    });
+    this._avgScorePerColumn = gridDimensions.map(function (_) {
+      return null;
     });
   }
   /** register run r in the grid at position i, j */
@@ -949,11 +997,43 @@ function () {
       return this._pointsPerColumn[col];
     }
 
-    var val = this.timesPage[col].reduce(function (sum, r) {
+    var val = this.timesPage[col].filter(function (x) {
+      return x != null;
+    }).reduce(function (sum, r) {
       return sum + r.score;
     }, 0);
     this._pointsPerColumn[col] = val;
     return val;
+  };
+
+  Player.prototype.getAvgScoreOfColumn = function (col) {
+    if (this._avgScorePerColumn[col] === null) {
+      var list = this.timesPage[col].filter(function (x) {
+        return x != null;
+      }).map(function (r) {
+        return r.score;
+      });
+      this._avgScorePerColumn[col] = GetAverageStatistics(list);
+    }
+
+    return this._avgScorePerColumn[col];
+  };
+
+  Player.prototype.getAvgScore = function () {
+    if (this._totalAvgScore === null) {
+      var list = this.timesPage.map(function (r) {
+        return r.filter(function (x) {
+          return x != null;
+        }).map(function (x) {
+          return x.score;
+        });
+      }).reduce(function (a, b) {
+        return a.concat(b);
+      }, []);
+      this._totalAvgScore = GetAverageStatistics(list);
+    }
+
+    return this._totalAvgScore;
   };
 
   Object.defineProperty(Player.prototype, "totalPoints", {
@@ -964,7 +1044,7 @@ function () {
         return sum + _this.getPointsOfColumn(i);
       }, 0);
     },
-    enumerable: true,
+    enumerable: false,
     configurable: true
   });
   Object.defineProperty(Player.prototype, "name", {
@@ -988,7 +1068,7 @@ function () {
       });
       return '';
     },
-    enumerable: true,
+    enumerable: false,
     configurable: true
   });
 
@@ -1052,6 +1132,7 @@ exports.default = Player;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.getPercentScoreFn = exports.eliteScoring = void 0;
 
 var eliteScoring = function eliteScoring(run) {
   if (run.place === 1) {
@@ -1079,6 +1160,12 @@ exports.getPercentScoreFn = getPercentScoreFn;
 "use strict";
 
 var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+
   return new (P || (P = Promise))(function (resolve, reject) {
     function fulfilled(value) {
       try {
@@ -1097,9 +1184,7 @@ var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, gene
     }
 
     function step(result) {
-      result.done ? resolve(result.value) : new P(function (resolve) {
-        resolve(result.value);
-      }).then(fulfilled, rejected);
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
     }
 
     step((generator = generator.apply(thisArg, _arguments || [])).next());
@@ -1223,8 +1308,6 @@ var __importDefault = this && this.__importDefault || function (mod) {
   };
 };
 
-var _this = this;
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -1234,7 +1317,7 @@ var Player_1 = __importDefault(require("./models/Player"));
 var scoring_1 = require("./scoring");
 
 var buildPlayerMap = function buildPlayerMap(grid) {
-  return __awaiter(_this, void 0, Promise, function () {
+  return __awaiter(void 0, void 0, Promise, function () {
     var pMap, gridDimensions;
     return __generator(this, function (_a) {
       pMap = new Map();
@@ -1267,6 +1350,12 @@ exports.default = buildPlayerMap;
 "use strict";
 
 var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+
   return new (P || (P = Promise))(function (resolve, reject) {
     function fulfilled(value) {
       try {
@@ -1285,9 +1374,7 @@ var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, gene
     }
 
     function step(result) {
-      result.done ? resolve(result.value) : new P(function (resolve) {
-        resolve(result.value);
-      }).then(fulfilled, rejected);
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
     }
 
     step((generator = generator.apply(thisArg, _arguments || [])).next());
@@ -1411,8 +1498,6 @@ var __importDefault = this && this.__importDefault || function (mod) {
   };
 };
 
-var _this = this;
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -1424,7 +1509,7 @@ var grid_transformation_1 = require("../speedruncom/grid-transformation");
 var build_map_1 = __importDefault(require("./build-map"));
 
 var getPlayerMap = function getPlayerMap() {
-  return __awaiter(_this, void 0, void 0, function () {
+  return __awaiter(void 0, void 0, void 0, function () {
     var raw, grid, transformations;
     return __generator(this, function (_a) {
       switch (_a.label) {
@@ -1471,10 +1556,11 @@ var __importDefault = this && this.__importDefault || function (mod) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.getAverageGetter = exports.getPointsGetter = void 0;
 
 var TableSelection_1 = __importDefault(require("../../models/TableSelection"));
 
-var getPointsGetter = function getPointsGetter(sel) {
+function getPointsGetter(sel) {
   switch (sel) {
     case TableSelection_1.default.TOTAL:
       return function (p) {
@@ -1506,36 +1592,79 @@ var getPointsGetter = function getPointsGetter(sel) {
         return p.totalPoints;
       };
   }
-};
+}
 
-exports.default = getPointsGetter;
+exports.getPointsGetter = getPointsGetter;
+
+function getAverageGetter(sel) {
+  switch (sel) {
+    case TableSelection_1.default.TOTAL:
+      return function (p) {
+        return p.getAvgScore();
+      };
+
+    case TableSelection_1.default.A_SIDES:
+      return function (p) {
+        return p.getAvgScoreOfColumn(0);
+      };
+
+    case TableSelection_1.default.COLLECTIBLES:
+      return function (p) {
+        return p.getAvgScoreOfColumn(1);
+      };
+
+    case TableSelection_1.default.B_SIDES:
+      return function (p) {
+        return p.getAvgScoreOfColumn(2);
+      };
+
+    case TableSelection_1.default.C_SIDES:
+      return function (p) {
+        return p.getAvgScoreOfColumn(3);
+      };
+
+    default:
+      return function (p) {
+        return p.getAvgScore();
+      };
+  }
+}
+
+exports.getAverageGetter = getAverageGetter;
 },{"../../models/TableSelection":"../models/TableSelection.ts"}],"../ui/util/array-helper.ts":[function(require,module,exports) {
 "use strict";
 /**
  * collection of functions to help transform the player array based on user input
  */
 
-var __importDefault = this && this.__importDefault || function (mod) {
-  return mod && mod.__esModule ? mod : {
-    "default": mod
-  };
-};
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.getSorterFunction = void 0;
 
-var points_getter_1 = __importDefault(require("./points-getter"));
+var AppState_1 = require("../../states/AppState");
+
+var points_getter_1 = require("./points-getter");
 
 var getSorterFunction = function getSorterFunction(s) {
-  var getter = points_getter_1.default(s.tableSelection);
-  return function (a, b) {
-    return getter(b) - getter(a);
-  };
+  if (s.rankingCriteria === AppState_1.rankingCriteria.point) {
+    var getter_1 = points_getter_1.getPointsGetter(s.tableSelection);
+    return function (a, b) {
+      return getter_1(b) - getter_1(a);
+    };
+  } else {
+    var getter_2 = points_getter_1.getAverageGetter(s.tableSelection);
+    return function (a, b) {
+      var as = getter_2(a);
+      var bs = getter_2(b);
+      if (!as[0] || !bs[0]) return bs[0] - as[0];
+      return bs[1] - bs[2] - (as[1] - as[2]);
+    };
+  }
 };
 
 exports.getSorterFunction = getSorterFunction;
-},{"./points-getter":"../ui/util/points-getter.ts"}],"../ui/components/control-buttons.ts":[function(require,module,exports) {
+},{"../../states/AppState":"../states/AppState.ts","./points-getter":"../ui/util/points-getter.ts"}],"../ui/components/control-buttons.ts":[function(require,module,exports) {
 "use strict";
 
 var __importDefault = this && this.__importDefault || function (mod) {
@@ -1604,6 +1733,7 @@ exports.default = htmlToElement;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.getOrdinal = exports.getMs = exports.getPts = exports.getMiniText = void 0;
 
 var getMiniText = function getMiniText(content) {
   var x = document.createElement('span');
@@ -1669,14 +1799,18 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var AppState_1 = require("../../states/AppState");
+
+var AppEvent_1 = __importDefault(require("../../models/AppEvent"));
+
 var html_helper_1 = __importDefault(require("../util/html-helper"));
 
-var points_getter_1 = __importDefault(require("../util/points-getter"));
+var points_getter_1 = require("../util/points-getter");
 
 var subtexts_1 = require("./subtexts");
 
-var getTableElement = function getTableElement(place, player, points) {
-  var ele = html_helper_1.default("\n    <tr class=\"hover-highlight\">\n      <td class=\"bold\">" + place + "</td>\n      <td>" + player.name + "</td>\n      <td>" + points + " " + subtexts_1.getPts(true) + "</td>\n    </tr>\n  ");
+var getTableElement = function getTableElement(place, player, points, average) {
+  var ele = html_helper_1.default("\n    <tr class=\"hover-highlight\">\n      <td class=\"bold\">" + place + "</td>\n      <td>" + player.name + "</td>\n      <td>" + points + " " + subtexts_1.getPts(true) + "</td>\n      <td><div class=\"averageCell\"><span class=\"count\"><span>" + average[0] + "</span></span>" + average[1].toFixed(2) + "<span class=\"confidenceBound\">" + average[2].toFixed(2) + "</span></div></td>\n    </tr>\n  ");
   ele.addEventListener('click', function () {
     window.open("./player.html?player=" + player.id, '_blank').focus();
   });
@@ -1684,26 +1818,51 @@ var getTableElement = function getTableElement(place, player, points) {
 };
 
 var getTableHeader = function getTableHeader(str) {
-  var x = str.map(function (e) {
-    return "<th>" + e + "</th>";
-  }).join('');
-  return html_helper_1.default("<tr>" + x + "</tr>");
+  var header = document.createElement('tr');
+
+  for (var _i = 0, str_1 = str; _i < str_1.length; _i++) {
+    var i = str_1[_i];
+    var th = document.createElement('th');
+    if (i[1] != null) i[1](th);
+    th.innerHTML = "<div>" + i[0] + "</div>";
+    header.appendChild(th);
+  }
+
+  return header;
 };
+
+function setRankingCriteria(s, crit) {
+  return function (el) {
+    console.log('Crit:', s.rankingCriteria, crit);
+
+    if (crit === s.rankingCriteria) {
+      el.classList.add('criteriaSel');
+    }
+
+    el.addEventListener('click', function () {
+      s.rankingCriteria = crit;
+      document.dispatchEvent(new CustomEvent(AppEvent_1.default.UPDATE_STATE, {
+        detail: s
+      }));
+    });
+  };
+}
 
 var getLeaderboardTable = function getLeaderboardTable(s, arr) {
   var t = document.createElement('table');
-  var getter = points_getter_1.default(s.tableSelection);
+  var getter = points_getter_1.getPointsGetter(s.tableSelection);
+  var getter2 = points_getter_1.getAverageGetter(s.tableSelection);
   t.classList.add('leaderboard-table');
-  var head = getTableHeader(['Place', 'Name', 'Points']);
+  var head = getTableHeader([['Place', null], ['Name', null], ['Points', setRankingCriteria(s, AppState_1.rankingCriteria.point)], ['Average', setRankingCriteria(s, AppState_1.rankingCriteria.average)]]);
   t.appendChild(head);
   arr.forEach(function (p, i) {
-    return t.appendChild(getTableElement(i + 1, p, getter(p)));
+    return t.appendChild(getTableElement(i + 1, p, getter(p), getter2(p)));
   });
   return t;
 };
 
 exports.default = getLeaderboardTable;
-},{"../util/html-helper":"../ui/util/html-helper.ts","../util/points-getter":"../ui/util/points-getter.ts","./subtexts":"../ui/components/subtexts.ts"}],"../ui/components/load-more-button.ts":[function(require,module,exports) {
+},{"../../states/AppState":"../states/AppState.ts","../../models/AppEvent":"../models/AppEvent.ts","../util/html-helper":"../ui/util/html-helper.ts","../util/points-getter":"../ui/util/points-getter.ts","./subtexts":"../ui/components/subtexts.ts"}],"../ui/components/load-more-button.ts":[function(require,module,exports) {
 "use strict";
 
 var __importDefault = this && this.__importDefault || function (mod) {
@@ -1761,6 +1920,12 @@ exports.default = getLoader;
 "use strict";
 
 var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+
   return new (P || (P = Promise))(function (resolve, reject) {
     function fulfilled(value) {
       try {
@@ -1779,9 +1944,7 @@ var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, gene
     }
 
     function step(result) {
-      result.done ? resolve(result.value) : new P(function (resolve) {
-        resolve(result.value);
-      }).then(fulfilled, rejected);
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
     }
 
     step((generator = generator.apply(thisArg, _arguments || [])).next());
@@ -1905,8 +2068,6 @@ var __importDefault = this && this.__importDefault || function (mod) {
   };
 };
 
-var _this = this;
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -1922,11 +2083,8 @@ var load_more_button_1 = __importDefault(require("./load-more-button"));
 var loader_1 = __importDefault(require("./loader"));
 
 var renderMainPage = function renderMainPage(state, container) {
-  return __awaiter(_this, void 0, Promise, function () {
+  return __awaiter(void 0, void 0, Promise, function () {
     var reset, arr;
-
-    var _this = this;
-
     return __generator(this, function (_a) {
       switch (_a.label) {
         case 0:
@@ -1942,7 +2100,7 @@ var renderMainPage = function renderMainPage(state, container) {
           return [4
           /*yield*/
           , Promise.all(arr.map(function (p) {
-            return __awaiter(_this, void 0, void 0, function () {
+            return __awaiter(void 0, void 0, void 0, function () {
               return __generator(this, function (_a) {
                 switch (_a.label) {
                   case 0:
@@ -1983,6 +2141,12 @@ exports.default = renderMainPage;
 "use strict";
 
 var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+
   return new (P || (P = Promise))(function (resolve, reject) {
     function fulfilled(value) {
       try {
@@ -2001,9 +2165,7 @@ var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, gene
     }
 
     function step(result) {
-      result.done ? resolve(result.value) : new P(function (resolve) {
-        resolve(result.value);
-      }).then(fulfilled, rejected);
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
     }
 
     step((generator = generator.apply(thisArg, _arguments || [])).next());
@@ -2127,11 +2289,11 @@ var __importDefault = this && this.__importDefault || function (mod) {
   };
 };
 
-var _this = this;
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var AppState_1 = require("../states/AppState");
 
 var AppEvent_1 = __importDefault(require("../models/AppEvent"));
 
@@ -2144,7 +2306,7 @@ var main_page_1 = __importDefault(require("../ui/components/main-page"));
 var loader_1 = __importDefault(require("../ui/components/loader"));
 
 var main = function main() {
-  return __awaiter(_this, void 0, void 0, function () {
+  return __awaiter(void 0, void 0, void 0, function () {
     var CONTAINER, pMap, initialState;
     return __generator(this, function (_a) {
       switch (_a.label) {
@@ -2160,7 +2322,8 @@ var main = function main() {
           initialState = {
             players: pMap,
             tableSelection: TableSelection_1.default.TOTAL,
-            tableState: 100
+            tableState: 100,
+            rankingCriteria: AppState_1.rankingCriteria.point
           };
           document.addEventListener(AppEvent_1.default.UPDATE_STATE, function (e) {
             main_page_1.default(e.detail, CONTAINER); // eslint-disable-next-line no-undef
@@ -2181,7 +2344,7 @@ var main = function main() {
 };
 
 main();
-},{"../models/AppEvent":"../models/AppEvent.ts","../models/TableSelection":"../models/TableSelection.ts","../../modules/rankings/get-map":"../../modules/rankings/get-map.ts","../ui/components/main-page":"../ui/components/main-page.ts","../ui/components/loader":"../ui/components/loader.ts"}],"../../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"../states/AppState":"../states/AppState.ts","../models/AppEvent":"../models/AppEvent.ts","../models/TableSelection":"../models/TableSelection.ts","../../modules/rankings/get-map":"../../modules/rankings/get-map.ts","../ui/components/main-page":"../ui/components/main-page.ts","../ui/components/loader":"../ui/components/loader.ts"}],"../../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -2209,7 +2372,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64192" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51599" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
