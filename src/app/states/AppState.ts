@@ -2,8 +2,8 @@ import Player from '../../modules/rankings/models/Player'
 import TableSelection from '../models/TableSelection'
 
 export enum rankingCriteria{
-    point,
-    average
+    point = 0,
+    average = 1
 };
 
 export default interface AppState {

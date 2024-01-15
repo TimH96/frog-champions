@@ -51,7 +51,7 @@ const getRawLeaderboardData = async (): Promise<RawDataCollection> => {
               // find the 2 relevant IDs based on variable name and run value label
               const variable = catVars.data.find((x) => x.name === varName)
               const value = Object.entries(variable!.values.values).find(
-                ([_key, val]) => val.label === valLabel
+                ([_, val]) => val.label === valLabel
               )
 
               return {

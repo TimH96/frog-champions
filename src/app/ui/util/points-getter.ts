@@ -1,7 +1,7 @@
 import Player from '../../../modules/rankings/models/Player'
 import TableSelection from '../../models/TableSelection'
 
-export function getPointsGetter(sel: TableSelection){
+export function getPointsGetter (sel: TableSelection) {
   switch (sel) {
     case TableSelection.TOTAL:
       return (p: Player) => p.totalPoints
@@ -23,7 +23,7 @@ export function getPointsGetter(sel: TableSelection){
   }
 }
 
-export function getAverageGetter(sel: TableSelection){
+export function getAverageGetter (sel: TableSelection) {
   switch (sel) {
     case TableSelection.TOTAL:
       return (p: Player) => p.getAvgScore()

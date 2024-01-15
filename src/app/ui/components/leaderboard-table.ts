@@ -1,9 +1,8 @@
-import Player from '../../../modules/rankings/models/Player'
+import Player, { AverageScore } from '../../../modules/rankings/models/Player'
 import AppState, { rankingCriteria } from '../../states/AppState'
 import AppEvent from '../../models/AppEvent'
 import htmlToElement from '../util/html-helper'
-import {getPointsGetter,getAverageGetter} from '../util/points-getter'
-import { AverageScore } from '../../../modules/rankings/models/Player'
+import { getPointsGetter, getAverageGetter } from '../util/points-getter'
 import { getPts } from './subtexts'
 
 const getTableElement = (
@@ -17,7 +16,7 @@ const getTableElement = (
       <td class="bold">${place}</td>
       <td>${player.name}</td>
       <td>${points} ${getPts(true)}</td>
-      <td><div><span class="count"><span>${average[0]}</span></span>${average[1].toFixed(2)}<span class="confidenceBound">${average[2].toFixed(2)}</span></div></td>
+      <td><div class="averageCell"><span class="count"><span>${average[0]}</span></span>${average[1].toFixed(2)}<span class="confidenceBound">${average[2].toFixed(2)}</span></div></td>
     </tr>
   `)
 
@@ -28,30 +27,30 @@ const getTableElement = (
   return ele
 }
 
-type cbFn = (elem: HTMLElement)=>void;
+type cbFn = (elem: HTMLElement) => void;
 
-const getTableHeader = (str: ([string,cbFn|null])[]) => {
-  let header = document.createElement("tr");
-  for(let i of str){
-    let th = document.createElement("th");
-    if(i[1] != null) i[1]!(th);
-    th.innerHTML = `<div>${i[0]}</div>`;
-    header.appendChild(th);
+const getTableHeader = (str: ([string, cbFn | null])[]) => {
+  const header = document.createElement('tr')
+  for (const i of str) {
+    const th = document.createElement('th')
+    if (i[1] != null) i[1]!(th)
+    th.innerHTML = `<div>${i[0]}</div>`
+    header.appendChild(th)
   }
-  return header;
+  return header
 }
 
-function setRankingCriteria(s:AppState, crit: rankingCriteria):cbFn {
-  return (el: HTMLElement)=>{
-    console.log("Crit:",s.rankingCriteria,crit);
-    if(crit == s.rankingCriteria){
-      el.classList.add("criteriaSel");
+function setRankingCriteria (s: AppState, crit: rankingCriteria): cbFn {
+  return (el: HTMLElement) => {
+    console.log('Crit:', s.rankingCriteria, crit)
+    if (crit === s.rankingCriteria) {
+      el.classList.add('criteriaSel')
     }
-    el.addEventListener('click',()=>{
-      s.rankingCriteria = crit;
+    el.addEventListener('click', () => {
+      s.rankingCriteria = crit
       document.dispatchEvent(new CustomEvent<AppState>(AppEvent.UPDATE_STATE, { detail: s }))
-    });
-  };
+    })
+  }
 }
 
 const getLeaderboardTable = (s: AppState, arr: Player[]) => {
@@ -61,9 +60,9 @@ const getLeaderboardTable = (s: AppState, arr: Player[]) => {
   t.classList.add('leaderboard-table')
 
   const head = getTableHeader([
-    ['Place', null], ['Name', null], 
-    ['Points',setRankingCriteria(s, rankingCriteria.point)],
-    ['Average',setRankingCriteria(s, rankingCriteria.average)]]) as HTMLElement;
+    ['Place', null], ['Name', null],
+    ['Points', setRankingCriteria(s, rankingCriteria.point)],
+    ['Average', setRankingCriteria(s, rankingCriteria.average)]]) as HTMLElement
   t.appendChild(head)
 
   arr.forEach((p, i) => t.appendChild(getTableElement(
