@@ -1662,7 +1662,7 @@ var getRunElement = function getRunElement(r) {
   var timeSplit = String(r.run.times.primary_t).split('.');
   var withoutMs = timeSplit[0];
   var onlyMs = timeSplit.length === 2 ? timeSplit[1].padEnd(3, '0') : '000';
-  var ele = getTd("<span>" + time_helper_1.toHHMMSS(withoutMs) + "." + subtexts_1.getMs(onlyMs, true) + "</span>", "<div><span>" + r.place + subtexts_1.getOrdinal(r.place, true) + "</span> / <span>" + r.score + " " + subtexts_1.getPts(true) + "</span></div>");
+  var ele = getTd("<span>" + time_helper_1.toHHMMSS(withoutMs) + "." + subtexts_1.getMs(onlyMs.substring(0, 3), true) + "</span>", "<div><span>" + r.place + subtexts_1.getOrdinal(r.place, true) + "</span> / <span>" + r.score + " " + subtexts_1.getPts(true) + "</span></div>");
   ele.addEventListener('click', function () {
     window.open(r.run.weblink);
   });
@@ -2250,7 +2250,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51599" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61369" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
