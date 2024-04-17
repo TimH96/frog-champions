@@ -32,7 +32,7 @@ const getRunElement = (
   const onlyMs = timeSplit.length === 2 ? timeSplit[1].padEnd(3, '0') : '000'
 
   const ele = getTd(
-    `<span>${toHHMMSS(withoutMs)}.${getMs(onlyMs, true)}</span>`,
+    `<span>${toHHMMSS(withoutMs)}.${getMs(onlyMs.substring(0, 3), true)}</span>`,
     `<div><span>${r.place}${getOrdinal(r.place, true)}</span> / <span>${r.score} ${getPts(true)}</span></div>`
   )
 
