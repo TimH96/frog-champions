@@ -172,7 +172,7 @@ exports.default = TableSelection;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.ChapterNames = exports.Categories = exports.CORE_FC_RUN_VALUE = exports.CORE_FC_VARIABLE_NAME = exports.ARB_RUN_VALUE = exports.FC_RUN_VALUE = exports.COLLECTIBLES_VARIABLE_NAME = exports.GAME_NAME = exports.GAME_ID = void 0;
+exports.ChapterNames = exports.Categories = exports.FAREWELL_NO_SKIP_VALUE = exports.FAREWELL_SKIP_VARIABLE_NAME = exports.CORE_FC_RUN_VALUE = exports.CORE_FC_VARIABLE_NAME = exports.ARB_RUN_VALUE = exports.FC_RUN_VALUE = exports.COLLECTIBLES_VARIABLE_NAME = exports.GAME_NAME = exports.GAME_ID = void 0;
 var GAME_ID = 'o1y9j9v6';
 exports.GAME_ID = GAME_ID;
 var GAME_NAME = 'Celeste';
@@ -187,6 +187,10 @@ var CORE_FC_VARIABLE_NAME = 'Full Clear';
 exports.CORE_FC_VARIABLE_NAME = CORE_FC_VARIABLE_NAME;
 var CORE_FC_RUN_VALUE = 'Yes';
 exports.CORE_FC_RUN_VALUE = CORE_FC_RUN_VALUE;
+var FAREWELL_SKIP_VARIABLE_NAME = 'Farewell Skip';
+exports.FAREWELL_SKIP_VARIABLE_NAME = FAREWELL_SKIP_VARIABLE_NAME;
+var FAREWELL_NO_SKIP_VALUE = 'No Farewell Skip';
+exports.FAREWELL_NO_SKIP_VALUE = FAREWELL_NO_SKIP_VALUE;
 var Categories;
 
 (function (Categories) {
@@ -700,27 +704,27 @@ var getRawLeaderboardData = function getRawLeaderboardData() {
           /*yield*/
           , Promise.all(categories.data.map(function (cat) {
             return Promise.all(levels.data.map(function (lvl, i) {
+              var catVars = variables[i];
+
+              var findVariable = function findVariable(varName, valLabel) {
+                // find the 2 relevant IDs based on variable name and run value label
+                var variable = catVars.data.find(function (x) {
+                  return x.name === varName;
+                });
+                var value = Object.entries(variable.values.values).find(function (_a) {
+                  var _ = _a[0],
+                      val = _a[1];
+                  return val.label === valLabel;
+                });
+                return {
+                  variableId: variable.id,
+                  valueId: value[0]
+                };
+              };
+
               if (cat.name === celeste_1.Categories.COLLECTIBLES) {
                 if (lvl.name === celeste_1.ChapterNames.C9) return wrapper_1.fetchLevelBoard(lvl, cat);
-                var catVars_1 = variables[i];
-                var queryVars = [];
-
-                var findVariable = function findVariable(varName, valLabel) {
-                  // find the 2 relevant IDs based on variable name and run value label
-                  var variable = catVars_1.data.find(function (x) {
-                    return x.name === varName;
-                  });
-                  var value = Object.entries(variable.values.values).find(function (_a) {
-                    var _ = _a[0],
-                        val = _a[1];
-                    return val.label === valLabel;
-                  });
-                  return {
-                    variableId: variable.id,
-                    valueId: value[0]
-                  };
-                }; // Core has a very different FC leaderboard structure, with ARB as category label and a FC run var
-
+                var queryVars = []; // Core has a very different FC leaderboard structure, with ARB as category label and a FC run var
 
                 var isCore = lvl.name === celeste_1.ChapterNames.C8;
                 queryVars.push(findVariable(celeste_1.COLLECTIBLES_VARIABLE_NAME, isCore ? celeste_1.ARB_RUN_VALUE : celeste_1.FC_RUN_VALUE));
@@ -729,6 +733,12 @@ var getRawLeaderboardData = function getRawLeaderboardData() {
                   queryVars.push(findVariable(celeste_1.CORE_FC_VARIABLE_NAME, celeste_1.CORE_FC_RUN_VALUE));
                 }
 
+                return wrapper_1.fetchLevelBoardWithVariables(lvl, cat, queryVars);
+              }
+
+              if (cat.name === celeste_1.Categories.A_SIDES && lvl.name === celeste_1.ChapterNames.C9) {
+                var queryVars = [];
+                queryVars.push(findVariable(celeste_1.FAREWELL_SKIP_VARIABLE_NAME, celeste_1.FAREWELL_NO_SKIP_VALUE));
                 return wrapper_1.fetchLevelBoardWithVariables(lvl, cat, queryVars);
               }
 
@@ -2372,7 +2382,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61369" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63285" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
