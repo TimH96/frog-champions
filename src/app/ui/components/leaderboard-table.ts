@@ -42,7 +42,6 @@ const getTableHeader = (str: ([string, cbFn | null])[]) => {
 
 function setRankingCriteria (s: AppState, crit: rankingCriteria): cbFn {
   return (el: HTMLElement) => {
-    console.log('Crit:', s.rankingCriteria, crit)
     if (crit === s.rankingCriteria) {
       el.classList.add('criteriaSel')
     }
