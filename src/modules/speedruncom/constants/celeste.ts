@@ -11,6 +11,9 @@ const ARB_RUN_VALUE = 'All Red Berries'
 const CORE_FC_VARIABLE_NAME = 'Full Clear'
 const CORE_FC_RUN_VALUE = 'Yes'
 
+const FAREWELL_SKIP_VARIABLE_NAME = 'Farewell Skip'
+const FAREWELL_NO_SKIP_VALUE = 'No Farewell Skip'
+
 enum Categories {
   A_SIDES = 'Clear',
   COLLECTIBLES = 'Collectibles',
@@ -38,6 +41,8 @@ export {
   ARB_RUN_VALUE,
   CORE_FC_VARIABLE_NAME,
   CORE_FC_RUN_VALUE,
+  FAREWELL_SKIP_VARIABLE_NAME,
+  FAREWELL_NO_SKIP_VALUE,
   Categories,
   ChapterNames
 }
