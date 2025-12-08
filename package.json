@@ -19,7 +19,7 @@
         "eslint-plugin-import": "^2.26.0",
         "eslint-plugin-n": "^15.2.0",
         "eslint-plugin-promise": "^6.0.0",
-        "gh-pages": "^1.2.0",
+        "gh-pages": "^6.3.0",
         "husky": "^7.0.0",
         "parcel-bundler": "^1.9.7",
         "typescript": "^3.3.1"
